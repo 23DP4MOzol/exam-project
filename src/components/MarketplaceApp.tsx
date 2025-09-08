@@ -74,7 +74,7 @@ const MarketplaceApp: React.FC = () => {
   
   // Filter states
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
   const [sortBy, setSortBy] = useState('newest');
 
@@ -181,7 +181,7 @@ const MarketplaceApp: React.FC = () => {
     let filtered = products.filter(product => {
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           product.description.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = !selectedCategory || product.category === selectedCategory;
+      const matchesCategory = !selectedCategory || selectedCategory === 'all' || product.category === selectedCategory;
       const matchesPrice = (!priceRange.min || product.price >= Number(priceRange.min)) &&
                           (!priceRange.max || product.price <= Number(priceRange.max));
       
@@ -668,7 +668,7 @@ const MarketplaceApp: React.FC = () => {
                     <SelectValue placeholder="Kategorija" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Visas kategorijas</SelectItem>
+                    <SelectItem value="all">Visas kategorijas</SelectItem>
                     {categories.map(cat => (
                       <SelectItem key={cat} value={cat}>{cat}</SelectItem>
                     ))}
