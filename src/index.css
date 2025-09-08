@@ -2,95 +2,90 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
+/* Modern E-commerce Design System */
 @layer base {
   :root {
+    /* Brand Colors - Modern marketplace palette */
+    --primary: 220 90% 56%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 220 90% 70%;
+    
+    /* Marketplace specific colors */
+    --marketplace-accent: 45 96% 64%;
+    --marketplace-success: 142 76% 36%;
+    --marketplace-warning: 32 95% 44%;
+    --marketplace-info: 200 94% 86%;
+    
+    /* Enhanced background system */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
+    --background-secondary: 220 14% 96%;
+    --background-tertiary: 220 9% 46%;
+    --foreground: 220 20% 14%;
+    
+    /* Card system */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --card-foreground: 220 20% 14%;
+    --card-hover: 220 14% 98%;
+    
+    /* Interactive elements */
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 220 90% 56%;
+    
+    /* Semantic colors */
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 20% 14%;
+    
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+    
+    --accent: var(--marketplace-accent);
+    --accent-foreground: 220 20% 14%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-marketplace: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--marketplace-accent)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary) / 0.9), hsl(var(--marketplace-accent) / 0.8));
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(var(--primary) / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(var(--primary) / 0.1), 0 2px 4px -1px hsl(var(--primary) / 0.06);
+    --shadow-lg: 0 10px 15px -3px hsl(var(--primary) / 0.1), 0 4px 6px -2px hsl(var(--primary) / 0.05);
+    --shadow-glow: 0 0 20px hsl(var(--primary) / 0.3);
+    
+    /* Typography */
+    --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    
+    /* Animations */
+    --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --bounce-in: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    
+    --radius: 12px;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background: 220 20% 14%;
+    --background-secondary: 220 20% 18%;
+    --background-tertiary: 220 9% 46%;
+    --foreground: 220 14% 96%;
+    
+    --card: 220 20% 18%;
+    --card-foreground: 220 14% 96%;
+    --card-hover: 220 20% 22%;
+    
+    --border: 220 20% 22%;
+    --input: 220 20% 22%;
+    
+    --muted: 220 20% 22%;
+    --muted-foreground: 220 9% 46%;
+    
+    --secondary: 220 20% 22%;
+    --secondary-foreground: 220 14% 96%;
   }
 }
 
@@ -98,8 +93,76 @@ All colors MUST be HSL.
   * {
     @apply border-border;
   }
-
+  
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-body);
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+  }
+}
+
+/* Enhanced component styles */
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-primary-foreground px-6 py-3 rounded-xl font-medium;
+    @apply hover:bg-primary/90 active:scale-95;
+    @apply transition-all duration-200;
+    @apply shadow-md hover:shadow-lg;
+    background: var(--gradient-primary);
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground px-6 py-3 rounded-xl font-medium;
+    @apply hover:bg-secondary/80 active:scale-95;
+    @apply transition-all duration-200;
+    @apply border border-border;
+  }
+  
+  .btn-marketplace {
+    @apply text-white px-6 py-3 rounded-xl font-medium;
+    @apply hover:scale-105 active:scale-95;
+    @apply transition-all duration-200;
+    @apply shadow-lg hover:shadow-xl;
+    background: var(--gradient-marketplace);
+  }
+  
+  .card-product {
+    @apply bg-card border border-border rounded-2xl overflow-hidden;
+    @apply hover:border-primary/30 hover:shadow-lg;
+    @apply transition-all duration-300;
+    @apply hover:-translate-y-1;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl border border-input;
+    @apply focus:ring-2 focus:ring-primary/20 focus:border-primary;
+    @apply bg-background text-foreground;
+    @apply transition-all duration-200;
+  }
+  
+  .hero-gradient {
+    background: var(--gradient-hero);
+  }
+  
+  .text-gradient {
+    background: var(--gradient-marketplace);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .marketplace-badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
+    @apply bg-marketplace-accent/10 text-marketplace-accent border border-marketplace-accent/20;
+  }
+  
+  .success-badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
+    @apply bg-marketplace-success/10 text-marketplace-success border border-marketplace-success/20;
   }
 }
