@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/hooks/use-toast';
-import { Star, ShoppingCart, Plus, Search, Filter, Trash2, User, LogIn, LogOut, Package, Heart, MapPin } from 'lucide-react';
+import { Star, ShoppingCart, Plus, Search, Filter, Trash2, User, LogIn, LogOut, Package, Heart, MapPin, Minus } from 'lucide-react';
 import marketplaceHero from '@/assets/marketplace-hero.jpg';
 import laptopImage from '@/assets/laptop.jpg';
 import chairImage from '@/assets/chair.jpg';
@@ -335,6 +335,10 @@ const MarketplaceApp: React.FC = () => {
 
   const removeFromCart = (productId: number) => {
     setCart(prev => prev.filter(item => item.product.id !== productId));
+    toast({
+      title: "Noņemts no groza",
+      description: "Produkts ir noņemts no groza"
+    });
   };
 
   const updateQuantity = (productId: number, quantity: number) => {
@@ -455,76 +459,95 @@ const MarketplaceApp: React.FC = () => {
   const categories = ['Elektronika', 'Mēbeles', 'Apģērbs', 'Mājsaimniecība', 'Sports', 'Auto'];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background-secondary to-background-tertiary">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
+      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80 border-b border-border/50 shadow-lg">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-8">
-              <h1 className="text-2xl font-bold text-gradient">E-tirgus</h1>
-              <nav className="hidden md:flex space-x-6">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-primary via-marketplace-accent to-primary-glow bg-clip-text text-transparent animate-pulse">
+                E-tirgus
+              </h1>
+              <nav className="hidden md:flex space-x-2">
                 <Button
                   variant={currentView === 'home' ? 'default' : 'ghost'}
                   onClick={() => setCurrentView('home')}
-                  className="font-medium"
+                  className={`font-medium transition-all duration-300 hover:scale-105 ${
+                    currentView === 'home' ? 'shadow-lg shadow-primary/25' : ''
+                  }`}
                 >
-                  Sākums
+                  🏠 Sākums
                 </Button>
                 <Button
                   variant={currentView === 'browse' ? 'default' : 'ghost'}
                   onClick={() => setCurrentView('browse')}
-                  className="font-medium"
+                  className={`font-medium transition-all duration-300 hover:scale-105 ${
+                    currentView === 'browse' ? 'shadow-lg shadow-primary/25' : ''
+                  }`}
                 >
-                  Pārlūkot
+                  🔍 Pārlūkot
                 </Button>
                 {currentUser && (
                   <Button
                     variant={currentView === 'sell' ? 'default' : 'ghost'}
                     onClick={() => setCurrentView('sell')}
-                    className="font-medium"
+                    className={`font-medium transition-all duration-300 hover:scale-105 ${
+                      currentView === 'sell' ? 'shadow-lg shadow-primary/25' : ''
+                    }`}
                   >
                     <Plus className="h-4 w-4 mr-2" />
-                    Pārdot
+                    💰 Pārdot
                   </Button>
                 )}
               </nav>
             </div>
 
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
               {currentUser && (
                 <>
                   <Button
-                    variant="ghost"
+                    variant={currentView === 'cart' ? 'default' : 'ghost'}
                     onClick={() => setCurrentView('cart')}
-                    className="relative"
+                    className="relative transition-all duration-300 hover:scale-110"
                   >
                     <ShoppingCart className="h-5 w-5" />
                     {cartItemCount > 0 && (
-                      <Badge className="absolute -top-2 -right-2 px-2 py-1 text-xs">
+                      <Badge className="absolute -top-2 -right-2 px-2 py-1 text-xs bg-marketplace-accent animate-bounce">
                         {cartItemCount}
                       </Badge>
                     )}
                   </Button>
                   <Button
-                    variant="ghost"
+                    variant={currentView === 'orders' ? 'default' : 'ghost'}
                     onClick={() => setCurrentView('orders')}
+                    className="transition-all duration-300 hover:scale-110"
                   >
                     <Package className="h-5 w-5" />
+                    📦
                   </Button>
                 </>
               )}
               
               {currentUser ? (
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm">Sveiks, {currentUser.username}!</span>
-                  <Button variant="ghost" onClick={handleLogout}>
+                <div className="flex items-center space-x-3 bg-card/50 rounded-full px-4 py-2 backdrop-blur-sm">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-gradient-to-r from-primary to-marketplace-accent rounded-full flex items-center justify-center text-white font-bold text-sm">
+                      {currentUser.username.charAt(0).toUpperCase()}
+                    </div>
+                    <span className="text-sm font-medium">Sveiks, {currentUser.username}!</span>
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    onClick={handleLogout}
+                    className="hover:bg-destructive/10 hover:text-destructive transition-all duration-300"
+                  >
                     <LogOut className="h-4 w-4" />
                   </Button>
                 </div>
               ) : (
                 <Button
                   onClick={() => setCurrentView('login')}
-                  className="btn-marketplace"
+                  className="bg-gradient-to-r from-primary to-marketplace-accent hover:from-primary-glow hover:to-marketplace-accent/80 text-white font-medium px-6 py-2 rounded-full transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-primary/25"
                 >
                   <LogIn className="h-4 w-4 mr-2" />
                   Pieslēgties
@@ -540,37 +563,37 @@ const MarketplaceApp: React.FC = () => {
         {currentView === 'home' && (
           <div className="space-y-12">
             {/* Hero Section */}
-            <section className="relative overflow-hidden rounded-3xl">
-              <div className="hero-gradient p-12 md:p-20 text-center text-white">
+            <section className="relative overflow-hidden rounded-3xl shadow-2xl">
+              <div className="bg-gradient-to-r from-primary via-marketplace-accent to-primary-glow p-12 md:p-20 text-center text-white relative">
                 <img 
                   src={marketplaceHero} 
                   alt="Marketplace" 
-                  className="absolute inset-0 w-full h-full object-cover opacity-20"
+                  className="absolute inset-0 w-full h-full object-cover opacity-20 animate-pulse"
                 />
                 <div className="relative z-10">
-                  <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                    Jūsu vietējais<br />
-                    <span className="text-marketplace-accent">E-tirgus</span>
+                  <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in">
+                    🛒 Jūsu vietējais<br />
+                    <span className="text-yellow-300 animate-bounce inline-block">E-tirgus</span> ✨
                   </h1>
-                  <p className="text-xl md:text-2xl mb-8 opacity-90">
-                    Pārdodiet un pērciet visu, ko vēlaties
+                  <p className="text-xl md:text-3xl mb-8 opacity-90 animate-fade-in delay-300">
+                    Pārdodiet un pērciet visu, ko vēlaties! 🎯
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <div className="flex flex-col sm:flex-row gap-6 justify-center animate-fade-in delay-500">
                     <Button
                       onClick={() => setCurrentView('browse')}
                       size="lg"
-                      className="btn-marketplace text-lg px-8 py-4"
+                      className="text-xl px-10 py-6 bg-white text-primary hover:bg-gray-100 font-bold rounded-full transition-all duration-300 hover:scale-110 shadow-2xl hover:shadow-white/25"
                     >
-                      Sākt pārlūkošanu
+                      🔍 Sākt pārlūkošanu
                     </Button>
                     {currentUser && (
                       <Button
                         onClick={() => setCurrentView('sell')}
                         variant="outline"
                         size="lg"
-                        className="text-lg px-8 py-4 bg-white/10 border-white/20 text-white hover:bg-white/20"
+                        className="text-xl px-10 py-6 bg-white/10 border-2 border-white/30 text-white hover:bg-white/20 font-bold rounded-full transition-all duration-300 hover:scale-110 backdrop-blur-sm"
                       >
-                        Pārdot produktu
+                        💰 Pārdot produktu
                       </Button>
                     )}
                   </div>
@@ -580,69 +603,95 @@ const MarketplaceApp: React.FC = () => {
 
             {/* Features */}
             <section className="grid md:grid-cols-3 gap-8">
-              <Card className="text-center p-6">
-                <div className="mb-4">
-                  <Search className="h-12 w-12 mx-auto text-primary" />
+              <Card className="text-center p-8 hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-gradient-to-br from-card to-card-hover border-2 border-border/50 hover:border-primary/30">
+                <div className="mb-6">
+                  <div className="w-16 h-16 mx-auto bg-gradient-to-r from-primary to-marketplace-accent rounded-full flex items-center justify-center animate-bounce">
+                    <Search className="h-8 w-8 text-white" />
+                  </div>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Viegla meklēšana</h3>
-                <p className="text-muted-foreground">
-                  Atrodiet tieši to, ko meklējat ar mūsu jaudīgajiem filtriem
+                <h3 className="text-2xl font-bold mb-4 text-primary">🔍 Viegla meklēšana</h3>
+                <p className="text-muted-foreground text-lg">
+                  Atrodiet tieši to, ko meklējat ar mūsu jaudīgajiem filtriem un AI meklēšanu!
                 </p>
               </Card>
-              <Card className="text-center p-6">
-                <div className="mb-4">
-                  <Heart className="h-12 w-12 mx-auto text-marketplace-accent" />
+              <Card className="text-center p-8 hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-gradient-to-br from-card to-card-hover border-2 border-border/50 hover:border-marketplace-accent/30">
+                <div className="mb-6">
+                  <div className="w-16 h-16 mx-auto bg-gradient-to-r from-marketplace-accent to-marketplace-success rounded-full flex items-center justify-center animate-bounce delay-100">
+                    <Heart className="h-8 w-8 text-white" />
+                  </div>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Drošs tirgus</h3>
-                <p className="text-muted-foreground">
-                  Vērtējumi un atsauksmes nodrošina uzticamu pirkšanas pieredzi
+                <h3 className="text-2xl font-bold mb-4 text-marketplace-accent">❤️ Drošs tirgus</h3>
+                <p className="text-muted-foreground text-lg">
+                  Vērtējumi un atsauksmes nodrošina uzticamu pirkšanas pieredzi visiem!
                 </p>
               </Card>
-              <Card className="text-center p-6">
-                <div className="mb-4">
-                  <MapPin className="h-12 w-12 mx-auto text-marketplace-success" />
+              <Card className="text-center p-8 hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-gradient-to-br from-card to-card-hover border-2 border-border/50 hover:border-marketplace-success/30">
+                <div className="mb-6">
+                  <div className="w-16 h-16 mx-auto bg-gradient-to-r from-marketplace-success to-marketplace-info rounded-full flex items-center justify-center animate-bounce delay-200">
+                    <MapPin className="h-8 w-8 text-white" />
+                  </div>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Vietējais tirgus</h3>
-                <p className="text-muted-foreground">
-                  Pērciet un pārdodiet savā apkaimē
+                <h3 className="text-2xl font-bold mb-4 text-marketplace-success">📍 Vietējais tirgus</h3>
+                <p className="text-muted-foreground text-lg">
+                  Pērciet un pārdodiet savā apkaimē - atbalstiet vietējo ekonomiku!
                 </p>
               </Card>
             </section>
 
             {/* Popular Products Preview */}
             <section>
-              <h2 className="text-3xl font-bold mb-8 text-center">Populārākie produkti</h2>
-              <div className="grid md:grid-cols-3 gap-6">
-                {products.slice(0, 3).map(product => (
-                  <Card key={product.id} className="card-product">
+              <h2 className="text-4xl font-bold mb-12 text-center bg-gradient-to-r from-primary via-marketplace-accent to-primary-glow bg-clip-text text-transparent">
+                🔥 Populārākie produkti ⭐
+              </h2>
+              <div className="grid md:grid-cols-3 gap-8">
+                {products.slice(0, 3).map((product, index) => (
+                  <Card key={product.id} className="group hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-gradient-to-br from-card to-card-hover border-2 border-border/50 hover:border-primary/30 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-marketplace-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     <div className="aspect-square relative overflow-hidden">
                       <img
                         src={product.image}
                         alt={product.name}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
-                      <Badge className="absolute top-3 left-3 marketplace-badge">
+                      <Badge className="absolute top-4 left-4 bg-gradient-to-r from-marketplace-accent to-marketplace-success text-white font-bold px-3 py-1 rounded-full shadow-lg animate-pulse">
                         {product.category}
                       </Badge>
+                      <div className="absolute top-4 right-4 w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center font-bold text-white shadow-lg">
+                        #{index + 1}
+                      </div>
                     </div>
-                    <CardContent className="p-4">
-                      <h3 className="font-semibold mb-2 text-lg">{product.name}</h3>
-                      <p className="text-2xl font-bold text-primary mb-2">€{product.price}</p>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CardContent className="p-6 relative z-10">
+                      <h3 className="font-bold mb-3 text-xl group-hover:text-primary transition-colors duration-300">{product.name}</h3>
+                      <div className="flex items-center justify-between mb-3">
+                        <p className="text-3xl font-bold bg-gradient-to-r from-primary to-marketplace-accent bg-clip-text text-transparent">€{product.price}</p>
+                        <div className="flex items-center gap-1">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`h-4 w-4 ${
+                                i < Math.floor(product.rating)
+                                  ? 'text-yellow-400 fill-current'
+                                  : 'text-gray-300'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 text-muted-foreground">
                         <MapPin className="h-4 w-4" />
-                        {product.location}
+                        <span className="font-medium">{product.location}</span>
                       </div>
                     </CardContent>
                   </Card>
                 ))}
               </div>
-              <div className="text-center mt-8">
+              <div className="text-center mt-12">
                 <Button
                   onClick={() => setCurrentView('browse')}
                   size="lg"
-                  className="btn-primary"
+                  className="text-xl px-12 py-6 bg-gradient-to-r from-primary via-marketplace-accent to-primary-glow hover:from-primary-glow hover:via-marketplace-accent hover:to-primary text-white font-bold rounded-full transition-all duration-300 hover:scale-110 shadow-2xl hover:shadow-primary/25 animate-pulse"
                 >
-                  Skatīt visus produktus
+                  🛍️ Skatīt visus produktus ➡️
                 </Button>
               </div>
             </section>
@@ -650,82 +699,96 @@ const MarketplaceApp: React.FC = () => {
         )}
 
         {currentView === 'browse' && (
-          <div className="space-y-6">
+          <div className="space-y-8">
+            <div className="text-center mb-8">
+              <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary via-marketplace-accent to-primary-glow bg-clip-text text-transparent">
+                🛍️ Pārlūkot produktus
+              </h1>
+              <p className="text-xl text-muted-foreground">Atrodiet visu, ko meklējat</p>
+            </div>
+
             {/* Search and Filters */}
-            <div className="bg-card rounded-2xl p-6 border border-border">
-              <div className="grid md:grid-cols-4 gap-4 mb-4">
+            <div className="bg-gradient-to-r from-card to-card-hover rounded-3xl p-8 border-2 border-border/50 shadow-lg">
+              <div className="grid md:grid-cols-4 gap-6">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                   <Input
-                    placeholder="Meklēt produktus..."
+                    placeholder="🔍 Meklēt produktus..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 input-field"
+                    className="pl-12 h-12 text-lg border-2 border-border/50 focus:border-primary/50 rounded-xl transition-all duration-300"
                   />
                 </div>
                 <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger className="input-field">
-                    <SelectValue placeholder="Kategorija" />
+                  <SelectTrigger className="h-12 text-lg border-2 border-border/50 focus:border-primary/50 rounded-xl">
+                    <SelectValue placeholder="📁 Kategorija" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Visas kategorijas</SelectItem>
+                    <SelectItem value="all">📁 Visas kategorijas</SelectItem>
                     {categories.map(cat => (
                       <SelectItem key={cat} value={cat}>{cat}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                   <Input
-                    placeholder="Min €"
+                    placeholder="💰 Min €"
                     type="number"
                     value={priceRange.min}
                     onChange={(e) => setPriceRange(prev => ({ ...prev, min: e.target.value }))}
-                    className="input-field"
+                    className="h-12 text-lg border-2 border-border/50 focus:border-primary/50 rounded-xl"
                   />
                   <Input
-                    placeholder="Max €"
+                    placeholder="💰 Max €"
                     type="number"
                     value={priceRange.max}
                     onChange={(e) => setPriceRange(prev => ({ ...prev, max: e.target.value }))}
-                    className="input-field"
+                    className="h-12 text-lg border-2 border-border/50 focus:border-primary/50 rounded-xl"
                   />
                 </div>
                 <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="input-field">
+                  <SelectTrigger className="h-12 text-lg border-2 border-border/50 focus:border-primary/50 rounded-xl">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="newest">Jaunākie</SelectItem>
-                    <SelectItem value="price-asc">Cena ↑</SelectItem>
-                    <SelectItem value="price-desc">Cena ↓</SelectItem>
-                    <SelectItem value="rating">Vērtējums</SelectItem>
+                    <SelectItem value="newest">🆕 Jaunākie</SelectItem>
+                    <SelectItem value="price-asc">💰 Cena ↑</SelectItem>
+                    <SelectItem value="price-desc">💰 Cena ↓</SelectItem>
+                    <SelectItem value="rating">⭐ Vērtējums</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
 
+            {/* Results count */}
+            <div className="text-center">
+              <p className="text-lg text-muted-foreground">
+                Atrasti <span className="font-bold text-primary">{filteredProducts.length}</span> produkti
+              </p>
+            </div>
+
             {/* Products Grid */}
             <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredProducts.map(product => (
-                <Card key={product.id} className="card-product">
-                  <div className="aspect-square relative overflow-hidden">
+                <Card key={product.id} className="group hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-gradient-to-br from-card to-card-hover border-2 border-border/50 hover:border-primary/30">
+                  <div className="aspect-square relative overflow-hidden rounded-t-lg">
                     <img
                       src={product.image}
                       alt={product.name}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
-                    <Badge className="absolute top-3 left-3 marketplace-badge">
+                    <Badge className="absolute top-3 left-3 bg-gradient-to-r from-marketplace-accent to-marketplace-success text-white font-bold px-2 py-1 rounded-full shadow-lg">
                       {product.category}
                     </Badge>
                     {product.condition !== 'new' && (
-                      <Badge className="absolute top-3 right-3 success-badge">
-                        {product.condition === 'excellent' ? 'Izcils' : 'Lietots'}
+                      <Badge className="absolute top-3 right-3 bg-gradient-to-r from-marketplace-success to-marketplace-info text-white px-2 py-1 rounded-full shadow-lg">
+                        {product.condition === 'excellent' ? '✨ Izcils' : '♻️ Lietots'}
                       </Badge>
                     )}
                   </div>
                   <CardContent className="p-4">
-                    <h3 className="font-semibold mb-2 line-clamp-2">{product.name}</h3>
-                    <p className="text-2xl font-bold text-primary mb-2">€{product.price}</p>
+                    <h3 className="font-bold mb-2 line-clamp-2 text-lg group-hover:text-primary transition-colors duration-300">{product.name}</h3>
+                    <p className="text-2xl font-bold bg-gradient-to-r from-primary to-marketplace-accent bg-clip-text text-transparent mb-2">€{product.price}</p>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
                       <MapPin className="h-4 w-4" />
                       {product.location}
@@ -748,65 +811,68 @@ const MarketplaceApp: React.FC = () => {
                       </span>
                     </div>
                   </CardContent>
-                  <CardFooter className="p-4 pt-0 space-y-2">
-                    <div className="flex gap-2 w-full">
+                  <CardFooter className="p-4 pt-0 space-y-3">
+                    <div className="flex gap-3 w-full">
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button 
                             variant="outline" 
-                            className="flex-1"
+                            className="flex-1 transition-all duration-300 hover:scale-105 hover:bg-primary/10 hover:border-primary/30 font-medium"
                             onClick={() => setSelectedProduct(product)}
                           >
-                            Skatīt
+                            👀 Skatīt
                           </Button>
                         </DialogTrigger>
-                        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-card to-card-hover border-2 border-border/50">
                           {selectedProduct && (
                             <>
                               <DialogHeader>
-                                <DialogTitle>{selectedProduct.name}</DialogTitle>
+                                <DialogTitle className="text-2xl font-bold">{selectedProduct.name}</DialogTitle>
                               </DialogHeader>
-                              <div className="space-y-4">
+                              <div className="space-y-6">
                                 <img
                                   src={selectedProduct.image}
                                   alt={selectedProduct.name}
-                                  className="w-full h-64 object-cover rounded-lg"
+                                  className="w-full h-80 object-cover rounded-xl shadow-lg"
                                 />
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className="grid grid-cols-2 gap-6">
                                   <div>
-                                    <p className="text-3xl font-bold text-primary">€{selectedProduct.price}</p>
-                                    <Badge className="mt-2 marketplace-badge">
+                                    <p className="text-4xl font-bold bg-gradient-to-r from-primary to-marketplace-accent bg-clip-text text-transparent">€{selectedProduct.price}</p>
+                                    <Badge className="mt-3 bg-gradient-to-r from-marketplace-accent to-marketplace-success text-white font-bold px-3 py-1 rounded-full">
                                       {selectedProduct.category}
                                     </Badge>
                                   </div>
                                   <div className="text-right">
-                                    <p className="text-sm text-muted-foreground">Pārdevējs</p>
-                                    <p className="font-semibold">{selectedProduct.seller}</p>
-                                    <p className="text-sm text-muted-foreground flex items-center justify-end">
+                                    <p className="text-sm text-muted-foreground">👤 Pārdevējs</p>
+                                    <p className="font-bold text-lg">{selectedProduct.seller}</p>
+                                    <p className="text-sm text-muted-foreground flex items-center justify-end mt-1">
                                       <MapPin className="h-4 w-4 mr-1" />
                                       {selectedProduct.location}
                                     </p>
                                   </div>
                                 </div>
-                                <p className="text-muted-foreground">{selectedProduct.description}</p>
+                                <div className="bg-muted/50 rounded-xl p-4">
+                                  <h4 className="font-semibold mb-2">📝 Apraksts</h4>
+                                  <p className="text-muted-foreground">{selectedProduct.description}</p>
+                                </div>
                                 
                                 {/* Reviews Section */}
-                                <div className="border-t pt-4">
-                                  <h4 className="font-semibold mb-4">Atsauksmes ({selectedProduct.reviews.length})</h4>
+                                <div className="border-t pt-6">
+                                  <h4 className="font-bold text-lg mb-4">⭐ Atsauksmes ({selectedProduct.reviews.length})</h4>
                                   
                                   {currentUser && (
-                                    <div className="mb-4 p-4 bg-muted rounded-lg">
-                                      <h5 className="font-medium mb-2">Pievienot atsauksmi</h5>
-                                      <div className="flex items-center gap-2 mb-2">
-                                        <span className="text-sm">Vērtējums:</span>
+                                    <div className="mb-6 p-6 bg-gradient-to-r from-muted/50 to-muted rounded-xl">
+                                      <h5 className="font-semibold mb-4">📝 Pievienot atsauksmi</h5>
+                                      <div className="flex items-center gap-3 mb-4">
+                                        <span className="text-sm font-medium">Vērtējums:</span>
                                         <div className="flex">
                                           {[1, 2, 3, 4, 5].map(rating => (
                                             <Star
                                               key={rating}
-                                              className={`h-5 w-5 cursor-pointer ${
+                                              className={`h-6 w-6 cursor-pointer transition-colors duration-200 ${
                                                 rating <= newReview.rating
                                                   ? 'text-yellow-400 fill-current'
-                                                  : 'text-gray-300'
+                                                  : 'text-gray-300 hover:text-yellow-200'
                                               }`}
                                               onClick={() => setNewReview(prev => ({ ...prev, rating }))}
                                             />
@@ -814,26 +880,31 @@ const MarketplaceApp: React.FC = () => {
                                         </div>
                                       </div>
                                       <Textarea
-                                        placeholder="Jūsu komentārs..."
+                                        placeholder="💬 Jūsu komentārs..."
                                         value={newReview.comment}
                                         onChange={(e) => setNewReview(prev => ({ ...prev, comment: e.target.value }))}
-                                        className="mb-2"
+                                        className="mb-4 min-h-[100px] border-2 border-border/50 focus:border-primary/50 rounded-xl"
                                       />
                                       <Button
                                         onClick={() => addReview(selectedProduct.id)}
                                         disabled={!newReview.comment.trim()}
-                                        size="sm"
+                                        className="bg-gradient-to-r from-marketplace-accent to-marketplace-success text-white font-medium rounded-full px-6 py-2 transition-all duration-300 hover:scale-105"
                                       >
-                                        Pievienot atsauksmi
+                                        ✨ Pievienot atsauksmi
                                       </Button>
                                     </div>
                                   )}
                                   
-                                  <div className="space-y-3">
+                                  <div className="space-y-4">
                                     {selectedProduct.reviews.map(review => (
-                                      <div key={review.id} className="border-b pb-3">
-                                        <div className="flex items-center justify-between mb-1">
-                                          <span className="font-medium">{review.username}</span>
+                                      <div key={review.id} className="border-b border-border/50 pb-4">
+                                        <div className="flex items-center justify-between mb-2">
+                                          <div className="flex items-center gap-2">
+                                            <div className="w-8 h-8 bg-gradient-to-r from-primary to-marketplace-accent rounded-full flex items-center justify-center text-white font-bold text-sm">
+                                              {review.username.charAt(0).toUpperCase()}
+                                            </div>
+                                            <span className="font-semibold">{review.username}</span>
+                                          </div>
                                           <div className="flex">
                                             {[...Array(5)].map((_, i) => (
                                               <Star
@@ -847,9 +918,9 @@ const MarketplaceApp: React.FC = () => {
                                             ))}
                                           </div>
                                         </div>
-                                        <p className="text-sm text-muted-foreground">{review.comment}</p>
-                                        <p className="text-xs text-muted-foreground mt-1">
-                                          {new Date(review.date).toLocaleDateString()}
+                                        <p className="text-muted-foreground mb-2">{review.comment}</p>
+                                        <p className="text-xs text-muted-foreground">
+                                          📅 {new Date(review.date).toLocaleDateString('lv-LV')}
                                         </p>
                                       </div>
                                     ))}
@@ -858,26 +929,20 @@ const MarketplaceApp: React.FC = () => {
                                 
                                 <Button
                                   onClick={() => addToCart(selectedProduct)}
-                                  className="w-full btn-marketplace"
-                                  disabled={selectedProduct.seller === currentUser?.username}
+                                  className="w-full bg-gradient-to-r from-primary via-marketplace-accent to-primary-glow text-white font-bold py-4 text-lg rounded-full transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-primary/25"
                                 >
-                                  {selectedProduct.seller === currentUser?.username
-                                    ? 'Jūsu produkts'
-                                    : 'Pievienot grozam'
-                                  }
+                                  🛒 Pievienot grozam
                                 </Button>
                               </div>
                             </>
                           )}
                         </DialogContent>
                       </Dialog>
-                      <Button
+                      <Button 
                         onClick={() => addToCart(product)}
-                        className="btn-primary flex-1"
-                        disabled={product.seller === currentUser?.username}
+                        className="flex-1 bg-gradient-to-r from-marketplace-accent to-marketplace-success text-white font-bold rounded-full transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg"
                       >
-                        <ShoppingCart className="h-4 w-4 mr-2" />
-                        Grozā
+                        🛒 Grozā
                       </Button>
                     </div>
                   </CardFooter>
@@ -886,278 +951,310 @@ const MarketplaceApp: React.FC = () => {
             </div>
 
             {filteredProducts.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground text-lg">Nav atrasti produkti ar šiem kritērijiem</p>
+              <div className="text-center py-16">
+                <div className="text-6xl mb-4">😔</div>
+                <h3 className="text-2xl font-bold mb-2">Nav atrasts neviens produkts</h3>
+                <p className="text-muted-foreground mb-6">Mēģiniet mainīt meklēšanas kritērijus</p>
+                <Button
+                  onClick={() => {
+                    setSearchTerm('');
+                    setSelectedCategory('all');
+                    setPriceRange({ min: '', max: '' });
+                  }}
+                  className="bg-gradient-to-r from-primary to-marketplace-accent text-white font-medium rounded-full px-6 py-2"
+                >
+                  🔄 Notīrīt filtrus
+                </Button>
               </div>
             )}
           </div>
         )}
 
-        {currentView === 'sell' && currentUser && (
+        {currentView === 'sell' && (
           <div className="max-w-2xl mx-auto">
-            <Card className="p-6">
-              <CardHeader>
-                <h2 className="text-2xl font-bold">Pievienot jaunu produktu</h2>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleAddProduct} className="space-y-4">
+            <div className="text-center mb-8">
+              <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary via-marketplace-accent to-primary-glow bg-clip-text text-transparent">
+                💰 Pārdot produktu
+              </h1>
+              <p className="text-xl text-muted-foreground">Pievienojiet savu produktu pārdošanai</p>
+            </div>
+
+            <Card className="p-8 bg-gradient-to-br from-card to-card-hover border-2 border-border/50 shadow-lg">
+              <form onSubmit={handleAddProduct} className="space-y-6">
+                <div>
+                  <Label htmlFor="name" className="text-lg font-semibold">📝 Produkta nosaukums</Label>
+                  <Input
+                    id="name"
+                    value={newProduct.name}
+                    onChange={(e) => setNewProduct(prev => ({ ...prev, name: e.target.value }))}
+                    placeholder="Piemēram: MacBook Pro 14 collas..."
+                    required
+                    className="mt-2 h-12 text-lg border-2 border-border/50 focus:border-primary/50 rounded-xl"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="name">Produkta nosaukums *</Label>
+                    <Label htmlFor="price" className="text-lg font-semibold">💰 Cena (€)</Label>
                     <Input
-                      id="name"
-                      value={newProduct.name}
-                      onChange={(e) => setNewProduct(prev => ({ ...prev, name: e.target.value }))}
+                      id="price"
+                      type="number"
+                      value={newProduct.price}
+                      onChange={(e) => setNewProduct(prev => ({ ...prev, price: e.target.value }))}
+                      placeholder="0.00"
                       required
-                      className="input-field"
+                      min="0"
+                      step="0.01"
+                      className="mt-2 h-12 text-lg border-2 border-border/50 focus:border-primary/50 rounded-xl"
                     />
                   </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="price">Cena (€) *</Label>
-                      <Input
-                        id="price"
-                        type="number"
-                        min="0"
-                        step="0.01"
-                        value={newProduct.price}
-                        onChange={(e) => setNewProduct(prev => ({ ...prev, price: e.target.value }))}
-                        required
-                        className="input-field"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="category">Kategorija *</Label>
-                      <Select
-                        value={newProduct.category}
-                        onValueChange={(value) => setNewProduct(prev => ({ ...prev, category: value }))}
-                      >
-                        <SelectTrigger className="input-field">
-                          <SelectValue placeholder="Izvēlieties" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {categories.map(cat => (
-                            <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="condition">Stāvoklis</Label>
-                      <Select
-                        value={newProduct.condition}
-                        onValueChange={(value: 'new' | 'used' | 'excellent') => 
-                          setNewProduct(prev => ({ ...prev, condition: value }))
-                        }
-                      >
-                        <SelectTrigger className="input-field">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="new">Jauns</SelectItem>
-                          <SelectItem value="excellent">Izcils</SelectItem>
-                          <SelectItem value="used">Lietots</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="location">Atrašanās vieta</Label>
-                      <Input
-                        id="location"
-                        value={newProduct.location}
-                        onChange={(e) => setNewProduct(prev => ({ ...prev, location: e.target.value }))}
-                        placeholder="Rīga"
-                        className="input-field"
-                      />
-                    </div>
-                  </div>
-                  
                   <div>
-                    <Label htmlFor="description">Apraksts</Label>
-                    <Textarea
-                      id="description"
-                      value={newProduct.description}
-                      onChange={(e) => setNewProduct(prev => ({ ...prev, description: e.target.value }))}
-                      rows={4}
-                      className="input-field"
-                    />
+                    <Label htmlFor="category" className="text-lg font-semibold">📁 Kategorija</Label>
+                    <Select value={newProduct.category} onValueChange={(value) => setNewProduct(prev => ({ ...prev, category: value }))}>
+                      <SelectTrigger className="mt-2 h-12 text-lg border-2 border-border/50 focus:border-primary/50 rounded-xl">
+                        <SelectValue placeholder="Izvēlieties kategoriju" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categories.map(cat => (
+                          <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
-                  
+                </div>
+
+                <div>
+                  <Label htmlFor="description" className="text-lg font-semibold">📄 Apraksts</Label>
+                  <Textarea
+                    id="description"
+                    value={newProduct.description}
+                    onChange={(e) => setNewProduct(prev => ({ ...prev, description: e.target.value }))}
+                    placeholder="Detalizēts produkta apraksts..."
+                    rows={4}
+                    className="mt-2 border-2 border-border/50 focus:border-primary/50 rounded-xl"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="image">Attēla URL</Label>
+                    <Label htmlFor="location" className="text-lg font-semibold">📍 Atrašanās vieta</Label>
                     <Input
-                      id="image"
-                      type="url"
-                      value={newProduct.image}
-                      onChange={(e) => setNewProduct(prev => ({ ...prev, image: e.target.value }))}
-                      placeholder="https://example.com/image.jpg"
-                      className="input-field"
+                      id="location"
+                      value={newProduct.location}
+                      onChange={(e) => setNewProduct(prev => ({ ...prev, location: e.target.value }))}
+                      placeholder="Rīga"
+                      className="mt-2 h-12 text-lg border-2 border-border/50 focus:border-primary/50 rounded-xl"
                     />
                   </div>
-                  
-                  <Button type="submit" className="w-full btn-marketplace">
-                    Pievienot produktu
-                  </Button>
-                </form>
-              </CardContent>
+                  <div>
+                    <Label htmlFor="condition" className="text-lg font-semibold">✨ Stāvoklis</Label>
+                    <Select value={newProduct.condition} onValueChange={(value: 'new' | 'used' | 'excellent') => setNewProduct(prev => ({ ...prev, condition: value }))}>
+                      <SelectTrigger className="mt-2 h-12 text-lg border-2 border-border/50 focus:border-primary/50 rounded-xl">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="new">🆕 Jauns</SelectItem>
+                        <SelectItem value="excellent">✨ Izcils</SelectItem>
+                        <SelectItem value="used">♻️ Lietots</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="image" className="text-lg font-semibold">🖼️ Attēla URL (pēc izvēles)</Label>
+                  <Input
+                    id="image"
+                    type="url"
+                    value={newProduct.image}
+                    onChange={(e) => setNewProduct(prev => ({ ...prev, image: e.target.value }))}
+                    placeholder="https://example.com/image.jpg"
+                    className="mt-2 h-12 text-lg border-2 border-border/50 focus:border-primary/50 rounded-xl"
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full h-14 text-xl font-bold bg-gradient-to-r from-primary via-marketplace-accent to-primary-glow text-white rounded-full transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-primary/25"
+                >
+                  ✨ Pievienot produktu
+                </Button>
+              </form>
             </Card>
           </div>
         )}
 
         {currentView === 'cart' && (
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold mb-8">Jūsu grozs</h2>
-            
+            <div className="text-center mb-8">
+              <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary via-marketplace-accent to-primary-glow bg-clip-text text-transparent">
+                🛒 Jūsu grozs
+              </h1>
+              <p className="text-xl text-muted-foreground">
+                {cart.length} produkti grozā
+              </p>
+            </div>
+
             {cart.length === 0 ? (
-              <Card className="p-12 text-center">
-                <ShoppingCart className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Jūsu grozs ir tukšs</h3>
-                <p className="text-muted-foreground mb-6">Pievienojiet produktus, lai sāktu iepirkties</p>
-                <Button onClick={() => setCurrentView('browse')} className="btn-primary">
-                  Sākt iepirkties
+              <div className="text-center py-16">
+                <div className="text-6xl mb-4">🛒</div>
+                <h3 className="text-2xl font-bold mb-2">Jūsu grozs ir tukšs</h3>
+                <p className="text-muted-foreground mb-6">Pievienojiet produktus, lai sāktu iepirkšanos</p>
+                <Button
+                  onClick={() => setCurrentView('browse')}
+                  className="bg-gradient-to-r from-primary to-marketplace-accent text-white font-medium rounded-full px-8 py-3"
+                >
+                  🔍 Sākt iepirkšanos
                 </Button>
-              </Card>
+              </div>
             ) : (
-              <div className="grid lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 space-y-4">
-                  {cart.map(item => (
-                    <Card key={item.product.id} className="p-4">
-                      <div className="flex gap-4">
-                        <img
-                          src={item.product.image}
-                          alt={item.product.name}
-                          className="w-20 h-20 object-cover rounded-lg"
-                        />
-                        <div className="flex-1">
-                          <h3 className="font-semibold">{item.product.name}</h3>
-                          <p className="text-sm text-muted-foreground">{item.product.seller}</p>
-                          <p className="font-bold text-primary">€{item.product.price}</p>
+              <div className="space-y-6">
+                {cart.map(item => (
+                  <Card key={item.product.id} className="p-6 bg-gradient-to-r from-card to-card-hover border-2 border-border/50 hover:shadow-lg transition-all duration-300">
+                    <div className="flex items-center gap-6">
+                      <img
+                        src={item.product.image}
+                        alt={item.product.name}
+                        className="w-24 h-24 object-cover rounded-xl shadow-md"
+                      />
+                      <div className="flex-1">
+                        <h3 className="text-xl font-bold mb-2">{item.product.name}</h3>
+                        <p className="text-2xl font-bold text-primary mb-2">€{item.product.price}</p>
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <MapPin className="h-4 w-4" />
+                          {item.product.location}
                         </div>
+                      </div>
+                      <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2">
                           <Button
-                            variant="outline"
                             size="sm"
+                            variant="outline"
                             onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                            className="w-10 h-10 rounded-full"
                           >
-                            -
+                            <Minus className="h-4 w-4" />
                           </Button>
-                          <span className="px-3 py-1 border rounded">{item.quantity}</span>
+                          <span className="text-xl font-bold w-12 text-center">{item.quantity}</span>
                           <Button
+                            size="sm"
                             variant="outline"
-                            size="sm"
                             onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                            className="w-10 h-10 rounded-full"
                           >
-                            +
+                            <Plus className="h-4 w-4" />
                           </Button>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-xl font-bold">€{(item.product.price * item.quantity).toFixed(2)}</p>
                           <Button
-                            variant="ghost"
                             size="sm"
+                            variant="destructive"
                             onClick={() => removeFromCart(item.product.id)}
+                            className="mt-2 rounded-full"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
                       </div>
-                    </Card>
-                  ))}
-                </div>
-                
-                <div>
-                  <Card className="p-6 sticky top-24">
-                    <h3 className="text-xl font-semibold mb-4">Kopsavilkums</h3>
-                    <div className="space-y-2 mb-4">
-                      {cart.map(item => (
-                        <div key={item.product.id} className="flex justify-between text-sm">
-                          <span>{item.product.name} x{item.quantity}</span>
-                          <span>€{(item.product.price * item.quantity).toFixed(2)}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="border-t pt-4">
-                      <div className="flex justify-between items-center text-lg font-bold">
-                        <span>Kopā:</span>
-                        <span>€{cartTotal.toFixed(2)}</span>
-                      </div>
-                    </div>
-                    <div className="space-y-3 mt-6">
-                      <Button onClick={checkout} className="w-full btn-marketplace">
-                        Apmaksāt
-                      </Button>
-                      <Button onClick={clearCart} variant="outline" className="w-full">
-                        Iztukšot grozu
-                      </Button>
                     </div>
                   </Card>
+                ))}
+
+                <div className="border-t pt-6">
+                  <div className="flex justify-between items-center mb-6">
+                    <div className="space-y-2">
+                      <Button
+                        variant="outline"
+                        onClick={clearCart}
+                        className="text-destructive border-destructive hover:bg-destructive/10 rounded-full"
+                      >
+                        🗑️ Iztukšot grozu
+                      </Button>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-2xl font-bold mb-2">
+                        Kopā: <span className="text-primary">€{cartTotal.toFixed(2)}</span>
+                      </p>
+                      <Button
+                        onClick={checkout}
+                        className="bg-gradient-to-r from-marketplace-success to-marketplace-info text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 hover:scale-105 shadow-lg"
+                      >
+                        💳 Apmaksāt pasūtījumu
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
           </div>
         )}
 
-        {currentView === 'orders' && currentUser && (
+        {currentView === 'orders' && (
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold mb-8">Jūsu pasūtījumi</h2>
-            
+            <div className="text-center mb-8">
+              <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary via-marketplace-accent to-primary-glow bg-clip-text text-transparent">
+                📦 Jūsu pasūtījumi
+              </h1>
+              <p className="text-xl text-muted-foreground">
+                {orders.length} pasūtījumi kopā
+              </p>
+            </div>
+
             {orders.length === 0 ? (
-              <Card className="p-12 text-center">
-                <Package className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Nav pasūtījumu</h3>
-                <p className="text-muted-foreground mb-6">Jūs vēl neesat veikuši nevienu pasūtījumu</p>
-                <Button onClick={() => setCurrentView('browse')} className="btn-primary">
-                  Sākt iepirkties
+              <div className="text-center py-16">
+                <div className="text-6xl mb-4">📦</div>
+                <h3 className="text-2xl font-bold mb-2">Nav veiktu pasūtījumu</h3>
+                <p className="text-muted-foreground mb-6">Sāciet iepirkšanos, lai redzētu pasūtījumus šeit</p>
+                <Button
+                  onClick={() => setCurrentView('browse')}
+                  className="bg-gradient-to-r from-primary to-marketplace-accent text-white font-medium rounded-full px-8 py-3"
+                >
+                  🔍 Sākt iepirkšanos
                 </Button>
-              </Card>
+              </div>
             ) : (
               <div className="space-y-6">
                 {orders.map(order => (
-                  <Card key={order.id} className="p-6">
+                  <Card key={order.id} className="p-6 bg-gradient-to-r from-card to-card-hover border-2 border-border/50">
                     <div className="flex justify-between items-start mb-4">
                       <div>
-                        <h3 className="text-lg font-semibold">Pasūtījums #{order.id}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          {new Date(order.date).toLocaleDateString()}
-                        </p>
+                        <h3 className="text-xl font-bold mb-2">Pasūtījums #{order.id}</h3>
+                        <p className="text-muted-foreground">📅 {new Date(order.date).toLocaleDateString('lv-LV')}</p>
                       </div>
-                      <Badge className={
-                        order.status === 'delivered' ? 'success-badge' :
-                        order.status === 'shipped' ? 'marketplace-badge' :
-                        'bg-yellow-100 text-yellow-800'
-                      }>
-                        {order.status === 'pending' ? 'Apstrādē' :
-                         order.status === 'paid' ? 'Apmaksāts' :
-                         order.status === 'shipped' ? 'Nosūtīts' : 'Piegādāts'}
-                      </Badge>
+                      <div className="text-right">
+                        <Badge 
+                          className={`px-3 py-1 rounded-full font-semibold ${
+                            order.status === 'pending' ? 'bg-marketplace-warning text-white' :
+                            order.status === 'paid' ? 'bg-marketplace-success text-white' :
+                            order.status === 'shipped' ? 'bg-marketplace-info text-white' :
+                            'bg-marketplace-accent text-white'
+                          }`}
+                        >
+                          {order.status === 'pending' ? '⏳ Gaida apmaksu' :
+                           order.status === 'paid' ? '✅ Apmaksāts' :
+                           order.status === 'shipped' ? '🚚 Nosūtīts' :
+                           '📦 Piegādāts'}
+                        </Badge>
+                        <p className="text-2xl font-bold text-primary mt-2">€{order.total.toFixed(2)}</p>
+                      </div>
                     </div>
                     
-                    <div className="space-y-2 mb-4">
+                    <div className="space-y-3">
                       {order.items.map(item => (
-                        <div key={item.product.id} className="flex items-center gap-4">
+                        <div key={item.product.id} className="flex items-center gap-4 p-3 bg-muted/30 rounded-lg">
                           <img
                             src={item.product.image}
                             alt={item.product.name}
-                            className="w-12 h-12 object-cover rounded"
+                            className="w-16 h-16 object-cover rounded-lg"
                           />
                           <div className="flex-1">
-                            <p className="font-medium">{item.product.name}</p>
-                            <p className="text-sm text-muted-foreground">
-                              Daudzums: {item.quantity} × €{item.product.price}
-                            </p>
+                            <h4 className="font-semibold">{item.product.name}</h4>
+                            <p className="text-muted-foreground">Daudzums: {item.quantity}</p>
                           </div>
-                          <p className="font-semibold">
-                            €{(item.product.price * item.quantity).toFixed(2)}
-                          </p>
+                          <p className="font-bold">€{(item.product.price * item.quantity).toFixed(2)}</p>
                         </div>
                       ))}
-                    </div>
-                    
-                    <div className="border-t pt-4">
-                      <div className="flex justify-between items-center">
-                        <span className="font-semibold">Kopā:</span>
-                        <span className="text-xl font-bold text-primary">€{order.total.toFixed(2)}</span>
-                      </div>
                     </div>
                   </Card>
                 ))}
@@ -1166,150 +1263,108 @@ const MarketplaceApp: React.FC = () => {
           </div>
         )}
 
-        {currentView === 'login' && !currentUser && (
+        {currentView === 'login' && (
           <div className="max-w-md mx-auto">
+            <div className="text-center mb-8">
+              <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary via-marketplace-accent to-primary-glow bg-clip-text text-transparent">
+                🔐 Pieslēgšanās
+              </h1>
+              <p className="text-xl text-muted-foreground">Pievienojieties mūsu kopienai</p>
+            </div>
+
             <Tabs defaultValue="login" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login">Pieslēgties</TabsTrigger>
-                <TabsTrigger value="register">Reģistrēties</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-2 mb-8">
+                <TabsTrigger value="login" className="font-semibold">🔓 Pieslēgties</TabsTrigger>
+                <TabsTrigger value="register" className="font-semibold">📝 Reģistrēties</TabsTrigger>
               </TabsList>
-              
+
               <TabsContent value="login">
-                <Card className="p-6">
-                  <CardHeader>
-                    <h2 className="text-2xl font-bold text-center">Pieslēgties</h2>
-                  </CardHeader>
-                  <CardContent>
-                    <form onSubmit={handleLogin} className="space-y-4">
-                      <div>
-                        <Label htmlFor="login-username">Lietotājvārds</Label>
-                        <Input
-                          id="login-username"
-                          value={loginForm.username}
-                          onChange={(e) => setLoginForm(prev => ({ ...prev, username: e.target.value }))}
-                          required
-                          className="input-field"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="login-password">Parole</Label>
-                        <Input
-                          id="login-password"
-                          type="password"
-                          value={loginForm.password}
-                          onChange={(e) => setLoginForm(prev => ({ ...prev, password: e.target.value }))}
-                          required
-                          className="input-field"
-                        />
-                      </div>
-                      <Button type="submit" className="w-full btn-marketplace">
-                        Pieslēgties
-                      </Button>
-                    </form>
-                    <div className="mt-4 p-4 bg-muted rounded-lg">
-                      <p className="text-sm text-muted-foreground">
-                        Demo versija: Jebkurš lietotājvārds un parole darbosies.
-                        Lietojiet "admin" kā lietotājvārdu admin tiesībām.
-                      </p>
+                <Card className="p-8 bg-gradient-to-br from-card to-card-hover border-2 border-border/50 shadow-lg">
+                  <form onSubmit={handleLogin} className="space-y-6">
+                    <div>
+                      <Label htmlFor="username" className="text-lg font-semibold">👤 Lietotājvārds</Label>
+                      <Input
+                        id="username"
+                        value={loginForm.username}
+                        onChange={(e) => setLoginForm(prev => ({ ...prev, username: e.target.value }))}
+                        placeholder="Ievadiet lietotājvārdu"
+                        required
+                        className="mt-2 h-12 text-lg border-2 border-border/50 focus:border-primary/50 rounded-xl"
+                      />
                     </div>
-                  </CardContent>
+                    <div>
+                      <Label htmlFor="password" className="text-lg font-semibold">🔒 Parole</Label>
+                      <Input
+                        id="password"
+                        type="password"
+                        value={loginForm.password}
+                        onChange={(e) => setLoginForm(prev => ({ ...prev, password: e.target.value }))}
+                        placeholder="Ievadiet paroli"
+                        required
+                        className="mt-2 h-12 text-lg border-2 border-border/50 focus:border-primary/50 rounded-xl"
+                      />
+                    </div>
+                    <Button
+                      type="submit"
+                      className="w-full h-14 text-xl font-bold bg-gradient-to-r from-primary via-marketplace-accent to-primary-glow text-white rounded-full transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-primary/25"
+                    >
+                      🚀 Pieslēgties
+                    </Button>
+                  </form>
                 </Card>
               </TabsContent>
-              
+
               <TabsContent value="register">
-                <Card className="p-6">
-                  <CardHeader>
-                    <h2 className="text-2xl font-bold text-center">Reģistrēties</h2>
-                  </CardHeader>
-                  <CardContent>
-                    <form onSubmit={handleRegister} className="space-y-4">
-                      <div>
-                        <Label htmlFor="register-username">Lietotājvārds</Label>
-                        <Input
-                          id="register-username"
-                          value={registerForm.username}
-                          onChange={(e) => setRegisterForm(prev => ({ ...prev, username: e.target.value }))}
-                          required
-                          className="input-field"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="register-email">E-pasts</Label>
-                        <Input
-                          id="register-email"
-                          type="email"
-                          value={registerForm.email}
-                          onChange={(e) => setRegisterForm(prev => ({ ...prev, email: e.target.value }))}
-                          required
-                          className="input-field"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="register-password">Parole</Label>
-                        <Input
-                          id="register-password"
-                          type="password"
-                          value={registerForm.password}
-                          onChange={(e) => setRegisterForm(prev => ({ ...prev, password: e.target.value }))}
-                          required
-                          className="input-field"
-                        />
-                      </div>
-                      <Button type="submit" className="w-full btn-marketplace">
-                        Reģistrēties
-                      </Button>
-                    </form>
-                  </CardContent>
+                <Card className="p-8 bg-gradient-to-br from-card to-card-hover border-2 border-border/50 shadow-lg">
+                  <form onSubmit={handleRegister} className="space-y-6">
+                    <div>
+                      <Label htmlFor="reg-username" className="text-lg font-semibold">👤 Lietotājvārds</Label>
+                      <Input
+                        id="reg-username"
+                        value={registerForm.username}
+                        onChange={(e) => setRegisterForm(prev => ({ ...prev, username: e.target.value }))}
+                        placeholder="Izvēlieties lietotājvārdu"
+                        required
+                        className="mt-2 h-12 text-lg border-2 border-border/50 focus:border-primary/50 rounded-xl"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="reg-email" className="text-lg font-semibold">📧 E-pasts</Label>
+                      <Input
+                        id="reg-email"
+                        type="email"
+                        value={registerForm.email}
+                        onChange={(e) => setRegisterForm(prev => ({ ...prev, email: e.target.value }))}
+                        placeholder="jūsu.epasts@piemērs.lv"
+                        required
+                        className="mt-2 h-12 text-lg border-2 border-border/50 focus:border-primary/50 rounded-xl"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="reg-password" className="text-lg font-semibold">🔒 Parole</Label>
+                      <Input
+                        id="reg-password"
+                        type="password"
+                        value={registerForm.password}
+                        onChange={(e) => setRegisterForm(prev => ({ ...prev, password: e.target.value }))}
+                        placeholder="Izveidojiet drošu paroli"
+                        required
+                        className="mt-2 h-12 text-lg border-2 border-border/50 focus:border-primary/50 rounded-xl"
+                      />
+                    </div>
+                    <Button
+                      type="submit"
+                      className="w-full h-14 text-xl font-bold bg-gradient-to-r from-marketplace-success via-marketplace-info to-marketplace-accent text-white rounded-full transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-marketplace-success/25"
+                    >
+                      ✨ Reģistrēties
+                    </Button>
+                  </form>
                 </Card>
               </TabsContent>
             </Tabs>
           </div>
         )}
       </main>
-
-      {/* Footer */}
-      <footer className="bg-background-secondary border-t border-border mt-20">
-        <div className="container mx-auto px-4 py-8">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <h3 className="font-bold text-lg mb-4 text-gradient">E-tirgus</h3>
-              <p className="text-muted-foreground">
-                Jūsu vietējais marketplace - pārdodiet un pērciet visu, ko vēlaties.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Kategorijas</h4>
-              <ul className="space-y-2 text-muted-foreground">
-                {categories.slice(0, 4).map(cat => (
-                  <li key={cat}>
-                    <a href="#" className="hover:text-primary transition-colors">{cat}</a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Palīdzība</h4>
-              <ul className="space-y-2 text-muted-foreground">
-                <li><a href="#" className="hover:text-primary transition-colors">Kā pārdot?</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Kā pirkt?</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Atbalsts</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">FAQ</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Kontakti</h4>
-              <ul className="space-y-2 text-muted-foreground">
-                <li>info@e-tirgus.lv</li>
-                <li>+371 20 123 456</li>
-                <li>Rīga, Latvija</li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-border mt-8 pt-8 text-center text-muted-foreground">
-            <p>&copy; 2024 E-tirgus. Visi darbīniekuautējas aizsargāti. Demo versija.</p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };
