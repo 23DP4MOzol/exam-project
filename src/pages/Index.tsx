@@ -1,7 +1,7 @@
-import MarketplaceApp from '@/components/MarketplaceApp';
+import ProfessionalMarketplace from '@/components/ProfessionalMarketplace';
 
 const Index = () => {
-  return <MarketplaceApp />;
+  return <ProfessionalMarketplace />;
 };
 
 export default Index;

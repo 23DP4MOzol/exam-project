@@ -53,11 +53,11 @@ export default {
           foreground: "hsl(var(--card-foreground))",
           hover: "hsl(var(--card-hover))",
         },
-        marketplace: {
-          accent: "hsl(var(--marketplace-accent))",
-          success: "hsl(var(--marketplace-success))",
-          warning: "hsl(var(--marketplace-warning))",
-          info: "hsl(var(--marketplace-info))",
+        business: {
+          blue: "hsl(var(--business-blue))",
+          green: "hsl(var(--business-green))",
+          orange: "hsl(var(--business-orange))",
+          gray: "hsl(var(--business-gray))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",

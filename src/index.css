@@ -68,90 +68,90 @@
   }
 }
 
-/* Modern E-commerce Design System */
+/* Professional Business Design System */
 @layer base {
   :root {
-    /* Brand Colors - Modern marketplace palette */
-    --primary: 220 90% 56%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 220 90% 70%;
+    /* Professional Business Colors */
+    --primary: 221 39% 11%;
+    --primary-foreground: 0 0% 98%;
+    --primary-glow: 221 39% 20%;
     
-    /* Marketplace specific colors */
-    --marketplace-accent: 45 96% 64%;
-    --marketplace-success: 142 76% 36%;
-    --marketplace-warning: 32 95% 44%;
-    --marketplace-info: 200 94% 86%;
+    /* Business specific colors */
+    --business-blue: 217 91% 60%;
+    --business-green: 142 69% 58%;
+    --business-orange: 25 95% 53%;
+    --business-gray: 215 14% 34%;
     
-    /* Enhanced background system */
+    /* Clean background system */
     --background: 0 0% 100%;
     --background-secondary: 220 14% 96%;
-    --background-tertiary: 220 9% 46%;
-    --foreground: 220 20% 14%;
+    --background-tertiary: 215 16% 47%;
+    --foreground: 221 39% 11%;
     
     /* Card system */
     --card: 0 0% 100%;
-    --card-foreground: 220 20% 14%;
-    --card-hover: 220 14% 98%;
+    --card-foreground: 221 39% 11%;
+    --card-hover: 210 40% 98%;
     
     /* Interactive elements */
     --border: 220 13% 91%;
     --input: 220 13% 91%;
-    --ring: 220 90% 56%;
+    --ring: 221 39% 11%;
     
     /* Semantic colors */
-    --secondary: 220 14% 96%;
-    --secondary-foreground: 220 20% 14%;
+    --secondary: 210 40% 98%;
+    --secondary-foreground: 221 39% 11%;
     
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 46%;
+    --muted: 210 40% 98%;
+    --muted-foreground: 215 16% 47%;
     
-    --accent: var(--marketplace-accent);
-    --accent-foreground: 220 20% 14%;
+    --accent: 210 40% 98%;
+    --accent-foreground: 221 39% 11%;
     
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 0 0% 98%;
     
-    /* Gradients */
+    /* Professional gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-marketplace: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--marketplace-accent)));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--primary) / 0.9), hsl(var(--marketplace-accent) / 0.8));
+    --gradient-business: linear-gradient(135deg, hsl(var(--business-blue)), hsl(var(--business-green)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary) / 0.95), hsl(var(--business-blue) / 0.9));
     
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 hsl(var(--primary) / 0.05);
-    --shadow-md: 0 4px 6px -1px hsl(var(--primary) / 0.1), 0 2px 4px -1px hsl(var(--primary) / 0.06);
-    --shadow-lg: 0 10px 15px -3px hsl(var(--primary) / 0.1), 0 4px 6px -2px hsl(var(--primary) / 0.05);
-    --shadow-glow: 0 0 20px hsl(var(--primary) / 0.3);
+    /* Clean shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-glow: 0 0 20px rgba(0, 0, 0, 0.1);
     
     /* Typography */
     --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     
-    /* Animations */
+    /* Smooth animations */
     --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --bounce-in: cubic-bezier(0.68, -0.55, 0.265, 1.55);
     
-    --radius: 12px;
+    --radius: 8px;
   }
 
   .dark {
-    --background: 220 20% 14%;
-    --background-secondary: 220 20% 18%;
-    --background-tertiary: 220 9% 46%;
-    --foreground: 220 14% 96%;
+    --background: 222 84% 5%;
+    --background-secondary: 217 33% 17%;
+    --background-tertiary: 215 16% 47%;
+    --foreground: 210 40% 98%;
     
-    --card: 220 20% 18%;
-    --card-foreground: 220 14% 96%;
-    --card-hover: 220 20% 22%;
+    --card: 222 84% 5%;
+    --card-foreground: 210 40% 98%;
+    --card-hover: 217 33% 17%;
     
-    --border: 220 20% 22%;
-    --input: 220 20% 22%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
     
-    --muted: 220 20% 22%;
-    --muted-foreground: 220 9% 46%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 16% 47%;
     
-    --secondary: 220 20% 22%;
-    --secondary-foreground: 220 14% 96%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
   }
 }
 
