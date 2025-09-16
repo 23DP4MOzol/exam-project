@@ -8,7 +8,7 @@ interface LanguageContextType {
   t: (key: string) => string;
 }
 
-const translations = {
+const translations: Record<Language, Record<string, string>> = {
   en: {
     // Header & Navigation
     'header.title': 'Professional Marketplace',
@@ -22,7 +22,7 @@ const translations = {
     'nav.login': 'Sign In',
     'nav.logout': 'Sign Out',
     'nav.language': 'Language',
-    
+
     // Hero Section
     'hero.title': 'Professional Business Marketplace',
     'hero.subtitle': 'Discover premium products from trusted sellers in our professional marketplace',
@@ -30,7 +30,7 @@ const translations = {
     'hero.stats.products': 'Products',
     'hero.stats.sellers': 'Sellers',
     'hero.stats.orders': 'Orders',
-    
+
     // Product Management
     'product.add': 'Add Product',
     'product.name': 'Product Name',
@@ -46,7 +46,7 @@ const translations = {
     'product.condition.new': 'New',
     'product.condition.used': 'Used',
     'product.condition.excellent': 'Excellent',
-    
+
     // Categories
     'category.all': 'All Categories',
     'category.Electronics': 'Electronics',
@@ -55,7 +55,7 @@ const translations = {
     'category.Home & Garden': 'Home & Garden',
     'category.Sports': 'Sports',
     'category.Automotive': 'Automotive',
-    
+
     // Search & Filters
     'search.placeholder': 'Search products...',
     'filter.category': 'Category',
@@ -65,7 +65,7 @@ const translations = {
     'filter.sort.newest': 'Newest',
     'filter.sort.priceAsc': 'Price: Low to High',
     'filter.sort.priceDesc': 'Price: High to Low',
-    
+
     // Cart
     'cart.title': 'Shopping Cart',
     'cart.empty': 'Your cart is empty',
@@ -73,7 +73,7 @@ const translations = {
     'cart.checkout': 'Checkout',
     'cart.quantity': 'Quantity',
     'cart.remove': 'Remove',
-    
+
     // Orders
     'orders.title': 'My Orders',
     'orders.empty': 'No orders found',
@@ -84,7 +84,7 @@ const translations = {
     'orders.orderNumber': 'Order #',
     'orders.date': 'Date',
     'orders.items': 'Items',
-    
+
     // Authentication
     'auth.signIn': 'Sign In',
     'auth.signUp': 'Sign Up',
@@ -93,7 +93,7 @@ const translations = {
     'auth.username': 'Username',
     'auth.switchToSignUp': 'Need an account? Sign up',
     'auth.switchToSignIn': 'Have an account? Sign in',
-    
+
     // Admin
     'admin.title': 'Admin Dashboard',
     'admin.users': 'Users',
@@ -104,7 +104,7 @@ const translations = {
     'admin.totalProducts': 'Total Products',
     'admin.totalOrders': 'Total Orders',
     'admin.revenue': 'Revenue',
-    
+
     // Settings
     'settings.title': 'Settings',
     'settings.appearance': 'Appearance',
@@ -116,7 +116,7 @@ const translations = {
     'settings.version': 'Version 1.0.0',
     'settings.builtWith': 'Built with React, TypeScript, and Supabase',
     'settings.close': 'Close',
-    
+
     // Messages
     'message.addedToCart': 'has been added to your cart',
     'message.productAdded': 'Your product has been listed successfully',
@@ -124,7 +124,7 @@ const translations = {
     'message.loginRequired': 'Please sign in to continue',
     'message.error': 'Error',
     'message.success': 'Success',
-    
+
     // Common
     'common.loading': 'Loading...',
     'common.save': 'Save',
@@ -149,7 +149,7 @@ const translations = {
     'nav.login': 'Ieiet',
     'nav.logout': 'Iziet',
     'nav.language': 'Valoda',
-    
+
     // Hero Section
     'hero.title': 'Profesionālā Biznesa Tirgotava',
     'hero.subtitle': 'Atklājiet premium produktus no uzticamiem pārdevējiem mūsu profesionālajā tirgotavā',
@@ -157,7 +157,7 @@ const translations = {
     'hero.stats.products': 'Produkti',
     'hero.stats.sellers': 'Pārdevēji',
     'hero.stats.orders': 'Pasūtījumi',
-    
+
     // Product Management
     'product.add': 'Pievienot Produktu',
     'product.name': 'Produkta Nosaukums',
@@ -173,7 +173,7 @@ const translations = {
     'product.condition.new': 'Jauns',
     'product.condition.used': 'Lietots',
     'product.condition.excellent': 'Izcils',
-    
+
     // Categories
     'category.all': 'Visas Kategorijas',
     'category.Electronics': 'Elektronika',
@@ -182,7 +182,7 @@ const translations = {
     'category.Home & Garden': 'Mājas un Dārzs',
     'category.Sports': 'Sports',
     'category.Automotive': 'Automašīnas',
-    
+
     // Search & Filters
     'search.placeholder': 'Meklēt produktus...',
     'filter.category': 'Kategorija',
@@ -192,7 +192,7 @@ const translations = {
     'filter.sort.newest': 'Jaunākie',
     'filter.sort.priceAsc': 'Cena: No mazās uz lielo',
     'filter.sort.priceDesc': 'Cena: No lielās uz mazo',
-    
+
     // Cart
     'cart.title': 'Iepirkumu Grozs',
     'cart.empty': 'Jūsu grozs ir tukšs',
@@ -200,7 +200,7 @@ const translations = {
     'cart.checkout': 'Noformēt',
     'cart.quantity': 'Daudzums',
     'cart.remove': 'Noņemt',
-    
+
     // Orders
     'orders.title': 'Mani Pasūtījumi',
     'orders.empty': 'Pasūtījumi nav atrasti',
@@ -211,7 +211,7 @@ const translations = {
     'orders.orderNumber': 'Pasūtījums #',
     'orders.date': 'Datums',
     'orders.items': 'Preces',
-    
+
     // Authentication
     'auth.signIn': 'Ieiet',
     'auth.signUp': 'Reģistrēties',
@@ -220,7 +220,7 @@ const translations = {
     'auth.username': 'Lietotājvārds',
     'auth.switchToSignUp': 'Vajag kontu? Reģistrējies',
     'auth.switchToSignIn': 'Ir konts? Ieej',
-    
+
     // Admin
     'admin.title': 'Administratora Panelis',
     'admin.users': 'Lietotāji',
@@ -231,7 +231,7 @@ const translations = {
     'admin.totalProducts': 'Kopā Produkti',
     'admin.totalOrders': 'Kopā Pasūtījumi',
     'admin.revenue': 'Ieņēmumi',
-    
+
     // Settings
     'settings.title': 'Iestatījumi',
     'settings.appearance': 'Izskats',
@@ -243,7 +243,7 @@ const translations = {
     'settings.version': 'Versija 1.0.0',
     'settings.builtWith': 'Izveidots ar React, TypeScript un Supabase',
     'settings.close': 'Aizvērt',
-    
+
     // Messages
     'message.addedToCart': 'ir pievienots jūsu grozam',
     'message.productAdded': 'Jūsu produkts ir veiksmīgi pievienots',
@@ -251,7 +251,7 @@ const translations = {
     'message.loginRequired': 'Lūdzu, ieejiet, lai turpinātu',
     'message.error': 'Kļūda',
     'message.success': 'Veiksmīgi',
-    
+
     // Common
     'common.loading': 'Ielādē...',
     'common.save': 'Saglabāt',
@@ -282,15 +282,9 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     localStorage.setItem('language', lang);
   };
 
+  // 🔥 FIXED: Direct flat key lookup
   const t = (key: string): string => {
-    const keys = key.split('.');
-    let value: any = translations[language];
-    
-    for (const k of keys) {
-      value = value?.[k];
-    }
-    
-    return value || key;
+    return translations[language][key] || key;
   };
 
   return (
