@@ -303,55 +303,84 @@ const ProfessionalMarketplace: React.FC = () => {
       });
       return;
     }
-
-    if (newProduct.name && newProduct.price && newProduct.category) {
-      try {
-        const { data, error } = await supabase
-          .from('products')
-          .insert({
-            name: newProduct.name,
-            price: Number(newProduct.price),
-            category: newProduct.category,
-            description: newProduct.description,
-            image_url: newProduct.image_url || laptopImage,
-            seller_id: user.id,
-            location: newProduct.location || 'Online',
-            condition: newProduct.condition,
-            stock: Number(newProduct.stock)
-          })
-          .select()
-          .single();
-
-        if (error) throw error;
-
-        toast({
-          title: "Product Added",
-          description: "Your product has been listed successfully"
-        });
-
-        setNewProduct({
-          name: '',
-          price: '',
-          category: '',
-          description: '',
-          image_url: '',
-          location: '',
-          condition: 'new',
-          stock: '1'
-        });
-
-        loadProducts();
-        setCurrentView('browse');
-      } catch (error) {
-        console.error('Error adding product:', error);
-        toast({
-          title: "Error",
-          description: "Failed to add product. Please try again.",
-          variant: "destructive"
-        });
-      }
+  
+    if (!newProduct.name || !newProduct.price || !newProduct.category) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields",
+        variant: "destructive"
+      });
+      return;
+    }
+  
+    const price = Number(newProduct.price);
+    const stock = Number(newProduct.stock);
+  
+    if (isNaN(price) || price <= 0) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid price",
+        variant: "destructive"
+      });
+      return;
+    }
+  
+    if (isNaN(stock) || stock < 0) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid stock number",
+        variant: "destructive"
+      });
+      return;
+    }
+  
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .insert({
+          name: newProduct.name,
+          price,
+          category: newProduct.category,
+          description: newProduct.description,
+          image_url: newProduct.image_url || '', // ensure it's a string
+          seller_id: user.id,
+          location: newProduct.location || 'Online',
+          condition: newProduct.condition,
+          stock
+        })
+        .select()
+        .single();
+  
+      if (error) throw error;
+  
+      toast({
+        title: "Product Added",
+        description: "Your product has been listed successfully"
+      });
+  
+      setNewProduct({
+        name: '',
+        price: '',
+        category: '',
+        description: '',
+        image_url: '',
+        location: '',
+        condition: 'new',
+        stock: '1'
+      });
+  
+      loadProducts();
+      setCurrentView('browse');
+    } catch (error) {
+      console.error('Error adding product:', error);
+      toast({
+        title: "Error",
+        description: "Failed to add product. Please try again.",
+        variant: "destructive"
+      });
     }
   };
+  
 
   // Cart management
   const addToCart = (product: Product) => {
