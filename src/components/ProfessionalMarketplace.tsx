@@ -899,7 +899,7 @@ const ProfessionalMarketplace: React.FC = () => {
                   />
                 </div>
                 <Button type="submit" className="w-full">
-                  List Product
+                  {t('product.add')}
                 </Button>
               </form>
             </Card>
