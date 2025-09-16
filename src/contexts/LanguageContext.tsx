@@ -46,6 +46,7 @@ const translations: Record<Language, Record<string, string>> = {
     'product.condition.new': 'New',
     'product.condition.used': 'Used',
     'product.condition.excellent': 'Excellent',
+    'product.list': 'List Product',
 
     // Categories
     'category.all': 'All Categories',
@@ -173,6 +174,7 @@ const translations: Record<Language, Record<string, string>> = {
     'product.condition.new': 'Jauns',
     'product.condition.used': 'Lietots',
     'product.condition.excellent': 'Izcils',
+    'product.list': 'Izlikt Produktu',
 
     // Categories
     'category.all': 'Visas Kategorijas',
