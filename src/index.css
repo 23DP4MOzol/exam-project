@@ -135,23 +135,37 @@
   }
 
   .dark {
+    /* Dark mode colors with proper contrast */
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 84% 5%;
+    --primary-glow: 217 91% 70%;
+    
     --background: 222 84% 5%;
     --background-secondary: 217 33% 17%;
-    --background-tertiary: 215 16% 47%;
+    --background-tertiary: 217 33% 12%;
     --foreground: 210 40% 98%;
     
-    --card: 222 84% 5%;
+    --card: 217 33% 17%;
     --card-foreground: 210 40% 98%;
-    --card-hover: 217 33% 17%;
+    --card-hover: 217 33% 20%;
     
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
+    --border: 217 33% 25%;
+    --input: 217 33% 20%;
+    --ring: 217 91% 60%;
     
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 217 33% 20%;
+    --muted-foreground: 215 20% 65%;
     
-    --secondary: 217 33% 17%;
+    --secondary: 217 33% 20%;
     --secondary-foreground: 210 40% 98%;
+    
+    --accent: 217 33% 20%;
+    --accent-foreground: 210 40% 98%;
+    
+    /* Dark mode gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-business: linear-gradient(135deg, hsl(var(--business-blue)), hsl(var(--business-green)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary) / 0.9), hsl(var(--business-blue) / 0.8));
   }
 }
 

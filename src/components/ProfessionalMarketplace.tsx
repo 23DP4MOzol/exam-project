@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
+import { useLanguage } from '@/contexts/LanguageContext';
 import Settings from './Settings';
 import { 
   Star, 
@@ -29,7 +30,8 @@ import {
   Store,
   TrendingUp,
   Users,
-  DollarSign
+  DollarSign,
+  Globe
 } from 'lucide-react';
 import laptopImage from '@/assets/laptop.jpg';
 import chairImage from '@/assets/chair.jpg';
@@ -75,6 +77,7 @@ interface Order {
 
 const ProfessionalMarketplace: React.FC = () => {
   const { user, profile, loading, signIn, signUp, signOut } = useAuth();
+  const { t } = useLanguage();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [currentView, setCurrentView] = useState<'home' | 'browse' | 'sell' | 'cart' | 'orders' | 'login' | 'settings' | 'admin'>('home');
   
@@ -464,21 +467,21 @@ const ProfessionalMarketplace: React.FC = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-6">
-              <h1 className="text-2xl font-bold text-primary">Professional Marketplace</h1>
+              <h1 className="text-2xl font-bold text-primary">{t('header.title')}</h1>
               <nav className="hidden md:flex space-x-1">
                 <Button
                   variant={currentView === 'home' ? 'default' : 'ghost'}
                   onClick={() => setCurrentView('home')}
                   className="font-medium"
                 >
-                  Home
+                  {t('nav.home')}
                 </Button>
                 <Button
                   variant={currentView === 'browse' ? 'default' : 'ghost'}
                   onClick={() => setCurrentView('browse')}
                   className="font-medium"
                 >
-                  Browse
+                  {t('nav.browse')}
                 </Button>
                 {user && (
                   <Button
@@ -487,7 +490,7 @@ const ProfessionalMarketplace: React.FC = () => {
                     className="font-medium"
                   >
                     <Plus className="h-4 w-4 mr-2" />
-                    Sell
+                    {t('nav.sell')}
                   </Button>
                 )}
               </nav>
@@ -520,7 +523,7 @@ const ProfessionalMarketplace: React.FC = () => {
                       onClick={() => setCurrentView('admin')}
                     >
                       <Shield className="h-4 w-4 mr-2" />
-                      Admin
+                      {t('nav.admin')}
                     </Button>
                   )}
                   <Button
@@ -538,7 +541,7 @@ const ProfessionalMarketplace: React.FC = () => {
                     <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm">
                       {profile?.username?.charAt(0).toUpperCase() || 'U'}
                     </div>
-                    <span className="text-sm font-medium">Welcome, {profile?.username}</span>
+                    <span className="text-sm font-medium text-foreground">Welcome, {profile?.username}</span>
                   </div>
                   <Button variant="ghost" onClick={handleLogout}>
                     <LogOut className="h-4 w-4" />
@@ -550,7 +553,7 @@ const ProfessionalMarketplace: React.FC = () => {
                   className="font-medium"
                 >
                   <LogIn className="h-4 w-4 mr-2" />
-                  Sign In
+                  {t('nav.login')}
                 </Button>
               )}
             </div>
@@ -575,19 +578,19 @@ const ProfessionalMarketplace: React.FC = () => {
             <section className="text-center space-y-6">
               <div className="max-w-3xl mx-auto">
                 <h1 className="text-4xl md:text-6xl font-bold text-primary mb-4">
-                  Professional Marketplace
+                  {t('hero.title')}
                 </h1>
                 <p className="text-xl text-muted-foreground mb-8">
-                  Buy and sell professional products with confidence. Connect with verified sellers and buyers in our secure marketplace.
+                  {t('hero.subtitle')}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button
+                    <Button
                     onClick={() => setCurrentView('browse')}
                     size="lg"
                     className="text-lg px-8 py-6"
                   >
                     <Search className="h-5 w-5 mr-2" />
-                    Browse Products
+                    {t('hero.cta')}
                   </Button>
                   {user && (
                     <Button
@@ -597,7 +600,7 @@ const ProfessionalMarketplace: React.FC = () => {
                       className="text-lg px-8 py-6"
                     >
                       <Store className="h-5 w-5 mr-2" />
-                      Start Selling
+                      {t('nav.sell')}
                     </Button>
                   )}
                 </div>

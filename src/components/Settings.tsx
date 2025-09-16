@@ -4,7 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { Moon, Sun, User, Shield, Settings as SettingsIcon } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Moon, Sun, User, Shield, Settings as SettingsIcon, Globe } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface SettingsProps {
   isDarkMode: boolean;
@@ -14,34 +16,67 @@ interface SettingsProps {
 }
 
 const Settings: React.FC<SettingsProps> = ({ isDarkMode, onThemeToggle, currentUser, onClose }) => {
+  const { language, setLanguage, t } = useLanguage();
+
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <SettingsIcon className="h-6 w-6 text-primary" />
-          <h1 className="text-2xl font-bold">Settings</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t('settings.title')}</h1>
         </div>
         <Button variant="outline" onClick={onClose}>
-          Close
+          {t('settings.close')}
         </Button>
       </div>
 
-      {/* Theme Settings */}
+      {/* Language Settings */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            {isDarkMode ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
-            Appearance
+          <CardTitle className="flex items-center gap-2 text-foreground">
+            <Globe className="h-5 w-5" />
+            {t('nav.language')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
-              <Label htmlFor="theme-toggle" className="text-base font-medium">
-                Dark Mode
+              <Label htmlFor="language-select" className="text-base font-medium text-foreground">
+                {t('nav.language')}
               </Label>
               <p className="text-sm text-muted-foreground">
-                Toggle between light and dark themes
+                Choose your preferred language
+              </p>
+            </div>
+            <Select value={language} onValueChange={setLanguage}>
+              <SelectTrigger className="w-32">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="en">English</SelectItem>
+                <SelectItem value="lv">Latviešu</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Theme Settings */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-foreground">
+            {isDarkMode ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+            {t('settings.appearance')}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <Label htmlFor="theme-toggle" className="text-base font-medium text-foreground">
+                {t('settings.darkMode')}
+              </Label>
+              <p className="text-sm text-muted-foreground">
+                {t('settings.darkMode.desc')}
               </p>
             </div>
             <Switch
@@ -56,20 +91,20 @@ const Settings: React.FC<SettingsProps> = ({ isDarkMode, onThemeToggle, currentU
       {/* Account Information */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-foreground">
             <User className="h-5 w-5" />
-            Account Information
+            {t('settings.account')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label className="text-sm text-muted-foreground">Username</Label>
-              <p className="font-medium">{currentUser?.username || 'Guest'}</p>
+              <Label className="text-sm text-muted-foreground">{t('auth.username')}</Label>
+              <p className="font-medium text-foreground">{currentUser?.username || 'Guest'}</p>
             </div>
             <div>
-              <Label className="text-sm text-muted-foreground">Email</Label>
-              <p className="font-medium">{currentUser?.email || 'Not logged in'}</p>
+              <Label className="text-sm text-muted-foreground">{t('auth.email')}</Label>
+              <p className="font-medium text-foreground">{currentUser?.email || 'Not logged in'}</p>
             </div>
           </div>
           {currentUser && (
@@ -98,22 +133,22 @@ const Settings: React.FC<SettingsProps> = ({ isDarkMode, onThemeToggle, currentU
       {currentUser?.role === 'admin' && (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-foreground">
               <Shield className="h-5 w-5" />
-              Administrator Settings
+              {t('settings.admin')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground mb-4">
-              You have administrator privileges. You can manage all products, users, and orders.
+              {t('settings.admin.desc')}
             </p>
             <div className="grid grid-cols-2 gap-4">
               <div className="p-3 bg-muted rounded-lg">
-                <p className="text-sm font-medium">Products</p>
+                <p className="text-sm font-medium text-foreground">{t('admin.products')}</p>
                 <p className="text-2xl font-bold text-primary">Full Access</p>
               </div>
               <div className="p-3 bg-muted rounded-lg">
-                <p className="text-sm font-medium">Users</p>
+                <p className="text-sm font-medium text-foreground">{t('admin.users')}</p>
                 <p className="text-2xl font-bold text-primary">Full Access</p>
               </div>
             </div>
@@ -125,10 +160,10 @@ const Settings: React.FC<SettingsProps> = ({ isDarkMode, onThemeToggle, currentU
       <Card>
         <CardContent className="pt-6">
           <div className="text-center space-y-2">
-            <h3 className="font-semibold">Professional Marketplace</h3>
-            <p className="text-sm text-muted-foreground">Version 1.0.0</p>
+            <h3 className="font-semibold text-foreground">{t('header.title')}</h3>
+            <p className="text-sm text-muted-foreground">{t('settings.version')}</p>
             <p className="text-xs text-muted-foreground">
-              Built with React, TypeScript, and Supabase
+              {t('settings.builtWith')}
             </p>
           </div>
         </CardContent>
