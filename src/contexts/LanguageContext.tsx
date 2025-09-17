@@ -22,6 +22,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.login': 'Sign In',
     'nav.logout': 'Sign Out',
     'nav.language': 'Language',
+    'nav.welcome': 'Welcome',
 
     // Hero Section
     'hero.title': 'Professional Business Marketplace',
@@ -70,6 +71,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Cart
     'cart.title': 'Shopping Cart',
     'cart.empty': 'Your cart is empty',
+    'cart.addProducts': 'Add some products to get started!',
     'cart.total': 'Total',
     'cart.checkout': 'Checkout',
     'cart.quantity': 'Quantity',
@@ -77,7 +79,9 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Orders
     'orders.title': 'My Orders',
-    'orders.empty': 'No orders found',
+    'orders.empty': 'No orders yet',
+    'orders.emptyDesc': 'Your order history will appear here',
+    'orders.startShopping': 'Start Shopping',
     'orders.status.pending': 'Pending',
     'orders.status.paid': 'Paid',
     'orders.status.shipped': 'Shipped',
@@ -89,9 +93,11 @@ const translations: Record<Language, Record<string, string>> = {
     // Authentication
     'auth.signIn': 'Sign In',
     'auth.signUp': 'Sign Up',
+    'auth.welcomeBack': 'Welcome Back',
     'auth.email': 'Email',
     'auth.password': 'Password',
     'auth.username': 'Username',
+    'auth.adminLogin': 'Admin login: admin@marketplace.com / password123',
     'auth.switchToSignUp': 'Need an account? Sign up',
     'auth.switchToSignIn': 'Have an account? Sign in',
 
@@ -126,6 +132,44 @@ const translations: Record<Language, Record<string, string>> = {
     'message.error': 'Error',
     'message.success': 'Success',
 
+    // Support Chat
+    'support.title': 'Support Chat',
+    'support.welcome': 'Hello! How can I help you today?',
+    'support.online': 'Online',
+    'support.userType.guest': 'Guest',
+    'support.userType.user': 'User',
+    'support.userType.admin': 'Admin',
+    'support.typePlaceholder': 'Type your message...',
+    'support.requestHuman': 'Request Human Help',
+    'support.escalation': 'I understand you need additional assistance. Would you like me to connect you with a moderator or administrator?',
+    'support.escalated': 'Your request has been escalated. A human representative will assist you shortly.',
+    'support.faq.payment': 'For payment issues, please check that your payment method is valid and has sufficient funds. Contact your bank if the problem persists.',
+    'support.faq.shipping': 'Shipping times vary by location. Standard delivery is 3-5 business days. You can track your order in the Orders section.',
+    'support.faq.returns': 'Returns are accepted within 30 days of purchase. Items must be in original condition. Go to your Orders to initiate a return.',
+    'support.faq.account': 'To update your account information, go to Settings. For password reset, use the "Forgot Password" link on the login page.',
+    'support.faq.addProduct': 'To add a product, click "Sell" in the navigation menu. Fill in all required fields and upload clear photos for best results.',
+    'support.default': 'I understand your question. For complex issues, you can request human assistance or check our FAQ section.',
+
+    // Browse/Search Page
+    'browse.title': 'Browse Products',
+    'browse.subtitle': 'Find exactly what you\'re looking for',
+    'browse.found': 'Found',
+    'browse.products': 'products',
+    'browse.noResults': 'No products found',
+    'browse.tryDifferent': 'Try adjusting your search criteria',
+
+    // Sell Page  
+    'sell.title': 'List a Product',
+    'sell.form.name': 'Product Name',
+    'sell.form.price': 'Price ($)',
+    'sell.form.category': 'Category',
+    'sell.form.description': 'Description',
+    'sell.form.location': 'Location',
+    'sell.form.condition': 'Condition',
+    'sell.form.imageUrl': 'Image URL',
+    'sell.form.selectCategory': 'Select category',
+    'sell.form.imagePlaceholder': 'https://example.com/image.jpg',
+
     // Common
     'common.loading': 'Loading...',
     'common.save': 'Save',
@@ -136,6 +180,8 @@ const translations: Record<Language, Record<string, string>> = {
     'common.back': 'Back',
     'common.next': 'Next',
     'common.previous': 'Previous',
+    'common.viewAll': 'View All Products',
+    'common.featuredProducts': 'Featured Products',
   },
   lv: {
     // Header & Navigation
@@ -150,6 +196,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.login': 'Ieiet',
     'nav.logout': 'Iziet',
     'nav.language': 'Valoda',
+    'nav.welcome': 'Laipni lūdzam',
 
     // Hero Section
     'hero.title': 'Profesionālā Biznesa Tirgotava',
@@ -198,6 +245,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Cart
     'cart.title': 'Iepirkumu Grozs',
     'cart.empty': 'Jūsu grozs ir tukšs',
+    'cart.addProducts': 'Pievienojiet produktus, lai sāktu!',
     'cart.total': 'Kopā',
     'cart.checkout': 'Noformēt',
     'cart.quantity': 'Daudzums',
@@ -205,7 +253,9 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Orders
     'orders.title': 'Mani Pasūtījumi',
-    'orders.empty': 'Pasūtījumi nav atrasti',
+    'orders.empty': 'Pagaidām nav pasūtījumu',
+    'orders.emptyDesc': 'Jūsu pasūtījumu vēsture būs šeit',
+    'orders.startShopping': 'Sākt Iepirkties',
     'orders.status.pending': 'Gaida',
     'orders.status.paid': 'Apmaksāts',
     'orders.status.shipped': 'Nosūtīts',
@@ -217,9 +267,11 @@ const translations: Record<Language, Record<string, string>> = {
     // Authentication
     'auth.signIn': 'Ieiet',
     'auth.signUp': 'Reģistrēties',
+    'auth.welcomeBack': 'Laipni Lūdzam Atpakaļ',
     'auth.email': 'E-pasts',
     'auth.password': 'Parole',
     'auth.username': 'Lietotājvārds',
+    'auth.adminLogin': 'Administratora pieteikšanās: admin@marketplace.com / password123',
     'auth.switchToSignUp': 'Vajag kontu? Reģistrējies',
     'auth.switchToSignIn': 'Ir konts? Ieej',
 
@@ -254,6 +306,44 @@ const translations: Record<Language, Record<string, string>> = {
     'message.error': 'Kļūda',
     'message.success': 'Veiksmīgi',
 
+    // Support Chat
+    'support.title': 'Atbalsta Čats',
+    'support.welcome': 'Sveiki! Kā es varu jums palīdzēt?',
+    'support.online': 'Tiešsaistē',
+    'support.userType.guest': 'Viesis',
+    'support.userType.user': 'Lietotājs',
+    'support.userType.admin': 'Administrators',
+    'support.typePlaceholder': 'Rakstiet savu ziņojumu...',
+    'support.requestHuman': 'Pieprasīt Cilvēka Palīdzību',
+    'support.escalation': 'Es saprotu, ka jums nepieciešama papildu palīdzība. Vai vēlaties, lai es jūs savienoju ar moderatoru vai administratoru?',
+    'support.escalated': 'Jūsu pieprasījums ir nodots tālāk. Cilvēks pārstāvis jums palīdzēs drīzumā.',
+    'support.faq.payment': 'Maksājumu problēmu gadījumā, lūdzu pārbaudiet, vai jūsu maksājuma metode ir derīga un ir pietiekami līdzekļu. Sazinieties ar banku, ja problēma turpinās.',
+    'support.faq.shipping': 'Piegādes laiki atšķiras atkarībā no atrašanās vietas. Standarta piegāde ir 3-5 darba dienas. Varat izsekot savu pasūtījumu sadaļā Pasūtījumi.',
+    'support.faq.returns': 'Atgriešana tiek pieņemta 30 dienu laikā pēc pirkuma. Precēm jābūt oriģinālā stāvoklī. Dodieties uz Pasūtījumiem, lai sāktu atgriešanu.',
+    'support.faq.account': 'Lai atjauninātu sava konta informāciju, dodieties uz Iestatījumiem. Paroles atiestatīšanai izmantojiet saiti "Aizmirstu paroli" pieteikšanās lapā.',
+    'support.faq.addProduct': 'Lai pievienotu produktu, noklikšķiniet uz "Pārdot" navigācijas izvēlnē. Aizpildiet visus obligātos laukus un augšupielādējiet skaidras fotogrāfijas.',
+    'support.default': 'Es saprotu jūsu jautājumu. Sarežģītu jautājumu gadījumā varat pieprasīt cilvēka palīdzību vai pārbaudīt mūsu FAQ sadaļu.',
+
+    // Browse/Search Page
+    'browse.title': 'Pārlūkot Produktus',
+    'browse.subtitle': 'Atrodiet tieši to, ko meklējat',
+    'browse.found': 'Atrasti',
+    'browse.products': 'produkti',
+    'browse.noResults': 'Produkti nav atrasti',
+    'browse.tryDifferent': 'Mēģiniet pielāgot meklēšanas kritērijus',
+
+    // Sell Page
+    'sell.title': 'Izlikt Produktu',
+    'sell.form.name': 'Produkta Nosaukums',
+    'sell.form.price': 'Cena ($)',
+    'sell.form.category': 'Kategorija',
+    'sell.form.description': 'Apraksts',
+    'sell.form.location': 'Atrašanās vieta',
+    'sell.form.condition': 'Stāvoklis',
+    'sell.form.imageUrl': 'Attēla URL',
+    'sell.form.selectCategory': 'Izvēlieties kategoriju',
+    'sell.form.imagePlaceholder': 'https://example.com/image.jpg',
+
     // Common
     'common.loading': 'Ielādē...',
     'common.save': 'Saglabāt',
@@ -264,6 +354,8 @@ const translations: Record<Language, Record<string, string>> = {
     'common.back': 'Atpakaļ',
     'common.next': 'Nākamais',
     'common.previous': 'Iepriekšējais',
+    'common.viewAll': 'Skatīt Visus Produktus',
+    'common.featuredProducts': 'Piedāvātie Produkti',
   }
 };
 

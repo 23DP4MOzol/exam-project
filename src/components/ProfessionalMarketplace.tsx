@@ -12,6 +12,7 @@ import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/contexts/LanguageContext';
 import Settings from './Settings';
+import SupportChat from './SupportChat';
 import { 
   Star, 
   ShoppingCart, 
@@ -31,7 +32,9 @@ import {
   TrendingUp,
   Users,
   DollarSign,
-  Globe
+  Globe,
+  MessageCircle,
+  Languages
 } from 'lucide-react';
 import laptopImage from '@/assets/laptop.jpg';
 import chairImage from '@/assets/chair.jpg';
@@ -77,9 +80,10 @@ interface Order {
 
 const ProfessionalMarketplace: React.FC = () => {
   const { user, profile, loading, signIn, signUp, signOut } = useAuth();
-  const { t } = useLanguage();
+  const { t, language, setLanguage } = useLanguage();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [currentView, setCurrentView] = useState<'home' | 'browse' | 'sell' | 'cart' | 'orders' | 'login' | 'settings' | 'admin'>('home');
+  const [isSupportChatOpen, setIsSupportChatOpen] = useState(false);
   
   // Data states
   const [products, setProducts] = useState<Product[]>([]);
@@ -526,6 +530,29 @@ const ProfessionalMarketplace: React.FC = () => {
             </div>
 
             <div className="flex items-center space-x-3">
+              {/* Language Switcher */}
+              <Select value={language} onValueChange={setLanguage}>
+                <SelectTrigger className="w-auto">
+                  <div className="flex items-center gap-2">
+                    <Languages className="h-4 w-4" />
+                    <span className="hidden sm:inline">{language.toUpperCase()}</span>
+                  </div>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="en">🇺🇸 English</SelectItem>
+                  <SelectItem value="lv">🇱🇻 Latviešu</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* Support Chat Button */}
+              <Button
+                variant="ghost"
+                onClick={() => setIsSupportChatOpen(true)}
+                className="relative"
+              >
+                <MessageCircle className="h-5 w-5" />
+              </Button>
+
               {user && (
                 <>
                   <Button
@@ -570,7 +597,7 @@ const ProfessionalMarketplace: React.FC = () => {
                     <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm">
                       {profile?.username?.charAt(0).toUpperCase() || 'U'}
                     </div>
-                    <span className="text-sm font-medium text-foreground">Welcome, {profile?.username}</span>
+                    <span className="text-sm font-medium text-foreground">{t('nav.welcome')}, {profile?.username}</span>
                   </div>
                   <Button variant="ghost" onClick={handleLogout}>
                     <LogOut className="h-4 w-4" />
@@ -669,7 +696,7 @@ const ProfessionalMarketplace: React.FC = () => {
 
             {/* Featured Products */}
             <section>
-              <h2 className="text-3xl font-bold text-center mb-8">Featured Products</h2>
+              <h2 className="text-3xl font-bold text-center mb-8">{t('common.featuredProducts')}</h2>
               <div className="grid md:grid-cols-3 gap-6">
                 {products.slice(0, 3).map((product) => (
                   <Card key={product.id} className="hover:shadow-lg transition-shadow">
@@ -700,7 +727,7 @@ const ProfessionalMarketplace: React.FC = () => {
                   size="lg"
                   variant="outline"
                 >
-                  View All Products
+                  {t('common.viewAll')}
                 </Button>
               </div>
             </section>
@@ -710,8 +737,8 @@ const ProfessionalMarketplace: React.FC = () => {
         {currentView === 'browse' && (
           <div className="space-y-6">
             <div className="text-center">
-              <h1 className="text-3xl font-bold mb-4">Browse Products</h1>
-              <p className="text-muted-foreground">Find exactly what you're looking for</p>
+              <h1 className="text-3xl font-bold mb-4">{t('browse.title')}</h1>
+              <p className="text-muted-foreground">{t('browse.subtitle')}</p>
             </div>
 
             {/* Search and Filters */}
@@ -720,7 +747,7 @@ const ProfessionalMarketplace: React.FC = () => {
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Search products..."
+                    placeholder={t('search.placeholder')}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="pl-10"
@@ -728,24 +755,24 @@ const ProfessionalMarketplace: React.FC = () => {
                 </div>
                 <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Category" />
+                    <SelectValue placeholder={t('filter.category')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="all">{t('category.all')}</SelectItem>
                     {categories.map(cat => (
-                      <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                      <SelectItem key={cat} value={cat}>{t(`category.${cat}`)}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
                 <div className="flex gap-2">
                   <Input
-                    placeholder="Min $"
+                    placeholder={t('filter.price.min')}
                     type="number"
                     value={priceRange.min}
                     onChange={(e) => setPriceRange(prev => ({ ...prev, min: e.target.value }))}
                   />
                   <Input
-                    placeholder="Max $"
+                    placeholder={t('filter.price.max')}
                     type="number"
                     value={priceRange.max}
                     onChange={(e) => setPriceRange(prev => ({ ...prev, max: e.target.value }))}
@@ -756,9 +783,9 @@ const ProfessionalMarketplace: React.FC = () => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="newest">Newest</SelectItem>
-                    <SelectItem value="price-asc">Price: Low to High</SelectItem>
-                    <SelectItem value="price-desc">Price: High to Low</SelectItem>
+                    <SelectItem value="newest">{t('filter.sort.newest')}</SelectItem>
+                    <SelectItem value="price-asc">{t('filter.sort.priceAsc')}</SelectItem>
+                    <SelectItem value="price-desc">{t('filter.sort.priceDesc')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -767,7 +794,7 @@ const ProfessionalMarketplace: React.FC = () => {
             {/* Results */}
             <div className="text-center">
               <p className="text-muted-foreground">
-                Found <span className="font-semibold">{filteredProducts.length}</span> products
+                {t('browse.found')} <span className="font-semibold">{filteredProducts.length}</span> {t('browse.products')}
               </p>
             </div>
 
@@ -786,7 +813,7 @@ const ProfessionalMarketplace: React.FC = () => {
                     </Badge>
                     {product.condition !== 'new' && (
                       <Badge className="absolute top-3 right-3" variant="secondary">
-                        {product.condition === 'excellent' ? 'Excellent' : 'Used'}
+                        {t(`product.condition.${product.condition}`)}
                       </Badge>
                     )}
                   </div>
@@ -808,7 +835,7 @@ const ProfessionalMarketplace: React.FC = () => {
                       disabled={!user}
                     >
                       <ShoppingCart className="h-4 w-4 mr-2" />
-                      Add to Cart
+                      {t('product.addToCart')}
                     </Button>
                   </CardFooter>
                 </Card>
@@ -819,11 +846,11 @@ const ProfessionalMarketplace: React.FC = () => {
 
         {currentView === 'sell' && user && (
           <div className="max-w-2xl mx-auto">
-            <h1 className="text-3xl font-bold mb-6">List a Product</h1>
+            <h1 className="text-3xl font-bold mb-6">{t('sell.title')}</h1>
             <Card className="p-6">
               <form onSubmit={handleAddProduct} className="space-y-4">
                 <div>
-                  <Label htmlFor="name">Product Name</Label>
+                  <Label htmlFor="name">{t('sell.form.name')}</Label>
                   <Input
                     id="name"
                     value={newProduct.name}
@@ -833,7 +860,7 @@ const ProfessionalMarketplace: React.FC = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="price">Price ($)</Label>
+                    <Label htmlFor="price">{t('sell.form.price')}</Label>
                     <Input
                       id="price"
                       type="number"
@@ -843,21 +870,21 @@ const ProfessionalMarketplace: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="category">Category</Label>
+                    <Label htmlFor="category">{t('sell.form.category')}</Label>
                     <Select value={newProduct.category} onValueChange={(value) => setNewProduct(prev => ({ ...prev, category: value }))}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select category" />
+                        <SelectValue placeholder={t('sell.form.selectCategory')} />
                       </SelectTrigger>
                       <SelectContent>
                         {categories.map(cat => (
-                          <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                          <SelectItem key={cat} value={cat}>{t(`category.${cat}`)}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
                 <div>
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description">{t('sell.form.description')}</Label>
                   <Textarea
                     id="description"
                     value={newProduct.description}
@@ -867,7 +894,7 @@ const ProfessionalMarketplace: React.FC = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="location">Location</Label>
+                    <Label htmlFor="location">{t('sell.form.location')}</Label>
                     <Input
                       id="location"
                       value={newProduct.location}
@@ -875,27 +902,27 @@ const ProfessionalMarketplace: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="condition">Condition</Label>
+                    <Label htmlFor="condition">{t('sell.form.condition')}</Label>
                     <Select value={newProduct.condition} onValueChange={(value: 'new' | 'used' | 'excellent') => setNewProduct(prev => ({ ...prev, condition: value }))}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="new">New</SelectItem>
-                        <SelectItem value="excellent">Excellent</SelectItem>
-                        <SelectItem value="used">Used</SelectItem>
+                        <SelectItem value="new">{t('product.condition.new')}</SelectItem>
+                        <SelectItem value="excellent">{t('product.condition.excellent')}</SelectItem>
+                        <SelectItem value="used">{t('product.condition.used')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
                 <div>
-                  <Label htmlFor="image_url">Image URL</Label>
+                  <Label htmlFor="image_url">{t('sell.form.imageUrl')}</Label>
                   <Input
                     id="image_url"
                     type="url"
                     value={newProduct.image_url}
                     onChange={(e) => setNewProduct(prev => ({ ...prev, image_url: e.target.value }))}
-                    placeholder="https://example.com/image.jpg"
+                    placeholder={t('sell.form.imagePlaceholder')}
                   />
                 </div>
                 <Button type="submit" className="w-full">
@@ -908,7 +935,7 @@ const ProfessionalMarketplace: React.FC = () => {
 
         {currentView === 'cart' && user && (
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-3xl font-bold mb-6">Shopping Cart</h1>
+            <h1 className="text-3xl font-bold mb-6">{t('cart.title')}</h1>
             {cart.length === 0 ? (
               <Card className="p-8 text-center">
                 <ShoppingCart className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
@@ -975,14 +1002,14 @@ const ProfessionalMarketplace: React.FC = () => {
 
         {currentView === 'orders' && user && (
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-3xl font-bold mb-6">My Orders</h1>
+            <h1 className="text-3xl font-bold mb-6">{t('orders.title')}</h1>
             {orders.length === 0 ? (
               <Card className="p-8 text-center">
                 <Package className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-                <h3 className="text-xl font-semibold mb-2">No orders yet</h3>
-                <p className="text-muted-foreground mb-4">Your order history will appear here</p>
+                <h3 className="text-xl font-semibold mb-2">{t('orders.empty')}</h3>
+                <p className="text-muted-foreground mb-4">{t('orders.emptyDesc')}</p>
                 <Button onClick={() => setCurrentView('browse')}>
-                  Start Shopping
+                  {t('orders.startShopping')}
                 </Button>
               </Card>
             ) : (
@@ -1139,19 +1166,19 @@ const ProfessionalMarketplace: React.FC = () => {
           <div className="max-w-md mx-auto">
             <Card className="p-6">
               <CardHeader>
-                <CardTitle className="text-center">Welcome Back</CardTitle>
+                <CardTitle className="text-center">{t('auth.welcomeBack')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <Tabs defaultValue="login" className="space-y-4">
                   <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="login">Sign In</TabsTrigger>
-                    <TabsTrigger value="register">Sign Up</TabsTrigger>
+                    <TabsTrigger value="login">{t('auth.signIn')}</TabsTrigger>
+                    <TabsTrigger value="register">{t('auth.signUp')}</TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="login">
                     <form onSubmit={handleLogin} className="space-y-4">
                       <div>
-                        <Label htmlFor="login-email">Email</Label>
+                        <Label htmlFor="login-email">{t('auth.email')}</Label>
                         <Input
                           id="login-email"
                           type="email"
@@ -1161,7 +1188,7 @@ const ProfessionalMarketplace: React.FC = () => {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="login-password">Password</Label>
+                        <Label htmlFor="login-password">{t('auth.password')}</Label>
                         <Input
                           id="login-password"
                           type="password"
@@ -1171,11 +1198,11 @@ const ProfessionalMarketplace: React.FC = () => {
                         />
                       </div>
                       <Button type="submit" className="w-full">
-                        Sign In
+                        {t('auth.signIn')}
                       </Button>
                     </form>
                     <p className="text-sm text-muted-foreground mt-4 text-center">
-                      Admin login: admin@marketplace.com / password123
+                      {t('auth.adminLogin')}
                     </p>
                   </TabsContent>
 
@@ -1221,6 +1248,13 @@ const ProfessionalMarketplace: React.FC = () => {
           </div>
         )}
       </main>
+
+      {/* Support Chat */}
+      <SupportChat
+        isOpen={isSupportChatOpen}
+        onClose={() => setIsSupportChatOpen(false)}
+        userRole={user ? (profile?.role === 'admin' ? 'admin' : 'user') : 'guest'}
+      />
     </div>
   );
 };
