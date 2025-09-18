@@ -5,6 +5,9 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
 import { MessageCircle, Send, X, User, Bot, AlertTriangle } from 'lucide-react';
 
 interface Message {
@@ -23,6 +26,7 @@ interface SupportChatProps {
 
 const SupportChat: React.FC<SupportChatProps> = ({ isOpen, onClose, userRole = 'guest' }) => {
   const { t } = useLanguage();
+  const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -103,16 +107,67 @@ const SupportChat: React.FC<SupportChatProps> = ({ isOpen, onClose, userRole = '
     setInputMessage('');
   };
 
-  const handleEscalate = () => {
-    const escalationMessage: Message = {
-      id: (Date.now() + 2).toString(),
-      content: t('support.escalated'),
-      sender: 'bot',
-      timestamp: new Date()
-    };
-    
-    setMessages(prev => [...prev, escalationMessage]);
-    setIsEscalated(false);
+  const handleEscalate = async () => {
+    if (!user) {
+      toast({
+        title: "Error",
+        description: "Please sign in to create a support ticket",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      // Create support ticket
+      const { data: ticket, error: ticketError } = await supabase
+        .from('support_tickets')
+        .insert({
+          user_id: user.id,
+          title: 'Support Request',
+          status: 'open',
+          priority: 'medium'
+        })
+        .select()
+        .single();
+
+      if (ticketError) throw ticketError;
+
+      // Add chat history to ticket
+      const chatMessages = messages.map(msg => ({
+        support_ticket_id: ticket.id,
+        sender_id: msg.sender === 'user' ? user.id : null,
+        content: msg.content,
+        message_type: 'text' as const
+      }));
+
+      const { error: messagesError } = await supabase
+        .from('messages')
+        .insert(chatMessages.filter(msg => msg.sender_id !== null));
+
+      if (messagesError) throw messagesError;
+
+      const escalationMessage: Message = {
+        id: (Date.now() + 2).toString(),
+        content: t('support.escalated'),
+        sender: 'bot',
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, escalationMessage]);
+      setIsEscalated(false);
+
+      toast({
+        title: "Success",
+        description: "Your request has been escalated to our support team",
+      });
+    } catch (error) {
+      console.error('Error escalating support:', error);
+      toast({
+        title: "Error",
+        description: "Failed to escalate request",
+        variant: "destructive"
+      });
+    }
   };
 
   if (!isOpen) return null;

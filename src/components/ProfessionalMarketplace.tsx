@@ -13,6 +13,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/contexts/LanguageContext';
 import Settings from './Settings';
 import SupportChat from './SupportChat';
+import MessagesPage from './MessagesPage';
+import AdminChatManagement from './AdminChatManagement';
 import { 
   Star, 
   ShoppingCart, 
@@ -82,7 +84,7 @@ const ProfessionalMarketplace: React.FC = () => {
   const { user, profile, loading, signIn, signUp, signOut } = useAuth();
   const { t, language, setLanguage } = useLanguage();
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [currentView, setCurrentView] = useState<'home' | 'browse' | 'sell' | 'cart' | 'orders' | 'login' | 'settings' | 'admin'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'browse' | 'sell' | 'cart' | 'orders' | 'login' | 'settings' | 'admin' | 'messages' | 'admin-chat'>('home');
   const [isSupportChatOpen, setIsSupportChatOpen] = useState(false);
   
   // Data states
@@ -573,14 +575,29 @@ const ProfessionalMarketplace: React.FC = () => {
                   >
                     <Package className="h-5 w-5" />
                   </Button>
+                  <Button
+                    variant={currentView === 'messages' ? 'default' : 'ghost'}
+                    onClick={() => setCurrentView('messages')}
+                  >
+                    <MessageCircle className="h-5 w-5" />
+                  </Button>
                   {profile?.role === 'admin' && (
-                    <Button
-                      variant={currentView === 'admin' ? 'default' : 'ghost'}
-                      onClick={() => setCurrentView('admin')}
-                    >
-                      <Shield className="h-4 w-4 mr-2" />
-                      {t('nav.admin')}
-                    </Button>
+                    <>
+                      <Button
+                        variant={currentView === 'admin' ? 'default' : 'ghost'}
+                        onClick={() => setCurrentView('admin')}
+                      >
+                        <Shield className="h-4 w-4 mr-2" />
+                        {t('nav.admin')}
+                      </Button>
+                      <Button
+                        variant={currentView === 'admin-chat' ? 'default' : 'ghost'}
+                        onClick={() => setCurrentView('admin-chat')}
+                      >
+                        <MessageCircle className="h-4 w-4 mr-2" />
+                        Chats
+                      </Button>
+                    </>
                   )}
                   <Button
                     variant="ghost"
@@ -626,6 +643,14 @@ const ProfessionalMarketplace: React.FC = () => {
             currentUser={profile}
             onClose={() => setCurrentView('home')}
           />
+        )}
+
+        {currentView === 'messages' && user && (
+          <MessagesPage onClose={() => setCurrentView('home')} />
+        )}
+
+        {currentView === 'admin-chat' && profile?.role === 'admin' && (
+          <AdminChatManagement onClose={() => setCurrentView('admin')} />
         )}
 
         {currentView === 'home' && (

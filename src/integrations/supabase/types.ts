@@ -14,6 +14,116 @@ export type Database = {
   }
   public: {
     Tables: {
+      conversations: {
+        Row: {
+          buyer_id: string | null
+          created_at: string
+          id: string
+          last_message_at: string | null
+          product_id: string | null
+          seller_id: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          buyer_id?: string | null
+          created_at?: string
+          id?: string
+          last_message_at?: string | null
+          product_id?: string | null
+          seller_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          buyer_id?: string | null
+          created_at?: string
+          id?: string
+          last_message_at?: string | null
+          product_id?: string | null
+          seller_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_buyer_id_fkey"
+            columns: ["buyer_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversations_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversations_seller_id_fkey"
+            columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          content: string
+          conversation_id: string | null
+          created_at: string
+          id: string
+          is_read: boolean
+          message_type: string
+          sender_id: string | null
+          support_ticket_id: string | null
+        }
+        Insert: {
+          content: string
+          conversation_id?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message_type?: string
+          sender_id?: string | null
+          support_ticket_id?: string | null
+        }
+        Update: {
+          content?: string
+          conversation_id?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message_type?: string
+          sender_id?: string | null
+          support_ticket_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_support_ticket_id_fkey"
+            columns: ["support_ticket_id"]
+            isOneToOne: false
+            referencedRelation: "support_tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       order_items: {
         Row: {
           created_at: string | null
@@ -182,6 +292,47 @@ export type Database = {
           },
           {
             foreignKeyName: "reviews_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      support_tickets: {
+        Row: {
+          created_at: string
+          id: string
+          priority: string
+          resolved_at: string | null
+          status: string
+          title: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          priority?: string
+          resolved_at?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          priority?: string
+          resolved_at?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_tickets_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"

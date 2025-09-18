@@ -150,6 +150,38 @@ const translations: Record<Language, Record<string, string>> = {
     'support.faq.addProduct': 'To add a product, click "Sell" in the navigation menu. Fill in all required fields and upload clear photos for best results.',
     'support.default': 'I understand your question. For complex issues, you can request human assistance or check our FAQ section.',
 
+    // Messages
+    'messages.title': 'Messages',
+    'messages.noMessages': 'No messages yet',
+    'messages.noConversations': 'No conversations yet',
+    'messages.selectConversation': 'Select a conversation to start messaging',
+    'messages.typePlaceholder': 'Type your message...',
+
+    // Admin
+    'admin.chatManagement': 'Chat Management',
+    'admin.supportTickets': 'Support Tickets',
+    'admin.conversations': 'Conversations',
+    'admin.noTickets': 'No support tickets',
+    'admin.noConversations': 'No conversations',
+    'admin.selectTicket': 'Select a ticket to view details',
+    'admin.selectConversation': 'Select a conversation to view messages',
+    'admin.markInProgress': 'Mark In Progress',
+    'admin.markResolved': 'Mark Resolved',
+    'admin.replyToTicket': 'Reply to ticket...',
+    'admin.viewingConversation': 'Viewing Conversation',
+
+    // Settings
+    'settings.changeUsername': 'Change Username',
+    'settings.changeEmail': 'Change Email',
+    'settings.changePassword': 'Change Password',
+    'settings.password': 'Password',
+    'settings.notLoggedIn': 'Not logged in',
+
+    // Common
+    'common.close': 'Close',
+    'common.buyer': 'Buyer',
+    'common.seller': 'Seller',
+
     // Browse/Search Page
     'browse.title': 'Browse Products',
     'browse.subtitle': 'Find exactly what you\'re looking for',
@@ -297,10 +329,38 @@ const translations: Record<Language, Record<string, string>> = {
     'settings.version': 'Versija 1.0.0',
     'settings.builtWith': 'Izveidots ar React, TypeScript un Supabase',
     'settings.close': 'Aizvērt',
+    'settings.changeUsername': 'Mainīt lietotājvārdu',
+    'settings.changeEmail': 'Mainīt e-pastu',
+    'settings.changePassword': 'Mainīt paroli',
+    'settings.password': 'Parole',
+    'settings.notLoggedIn': 'Nav pieteicies',
 
     // Messages
+    'messages.title': 'Ziņas',
+    'messages.noMessages': 'Vēl nav ziņu',
+    'messages.noConversations': 'Vēl nav sarunu',
+    'messages.selectConversation': 'Izvēlieties sarunu, lai sāktu ziņojumus',
+    'messages.typePlaceholder': 'Ierakstiet savu ziņu...',
     'message.addedToCart': 'ir pievienots jūsu grozam',
     'message.productAdded': 'Jūsu produkts ir veiksmīgi pievienots',
+
+    // Admin
+    'admin.chatManagement': 'Tērzēšanas pārvaldība',
+    'admin.supportTickets': 'Atbalsta biļetes',
+    'admin.conversations': 'Sarunas',
+    'admin.noTickets': 'Nav atbalsta biļešu',
+    'admin.noConversations': 'Nav sarunu',
+    'admin.selectTicket': 'Izvēlieties biļeti, lai skatītu detaļas',
+    'admin.selectConversation': 'Izvēlieties sarunu, lai skatītu ziņas',
+    'admin.markInProgress': 'Atzīmēt kā procesā',
+    'admin.markResolved': 'Atzīmēt kā atrisinātu',
+    'admin.replyToTicket': 'Atbildēt uz biļeti...',
+    'admin.viewingConversation': 'Skatās sarunu',
+
+    // Common
+    'common.close': 'Aizvērt',
+    'common.buyer': 'Pircējs',
+    'common.seller': 'Pārdevējs',
     'message.orderPlaced': 'ir veiksmīgi ievietots',
     'message.loginRequired': 'Lūdzu, ieejiet, lai turpinātu',
     'message.error': 'Kļūda',

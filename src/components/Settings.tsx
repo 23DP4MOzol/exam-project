@@ -97,19 +97,41 @@ const Settings: React.FC<SettingsProps> = ({ isDarkMode, onThemeToggle, currentU
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label className="text-sm text-muted-foreground">{t('auth.username')}</Label>
-              <p className="font-medium text-foreground">{currentUser?.username || 'Guest'}</p>
-            </div>
-            <div>
-              <Label className="text-sm text-muted-foreground">{t('auth.email')}</Label>
-              <p className="font-medium text-foreground">{currentUser?.email || 'Not logged in'}</p>
-            </div>
-          </div>
-          {currentUser && (
+          {currentUser ? (
             <>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-sm text-muted-foreground">{t('auth.username')}</Label>
+                  <div className="flex items-center gap-2">
+                    <p className="font-medium text-foreground flex-1">{currentUser.username}</p>
+                    <Button variant="outline" size="sm">
+                      {t('settings.changeUsername')}
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label className="text-sm text-muted-foreground">{t('auth.email')}</Label>
+                  <div className="flex items-center gap-2">
+                    <p className="font-medium text-foreground flex-1">{currentUser.email}</p>
+                    <Button variant="outline" size="sm">
+                      {t('settings.changeEmail')}
+                    </Button>
+                  </div>
+                </div>
+                
+                <Separator />
+                
+                <div className="space-y-2">
+                  <Label className="text-sm text-muted-foreground">{t('settings.password')}</Label>
+                  <Button variant="outline" size="sm" className="w-full">
+                    {t('settings.changePassword')}
+                  </Button>
+                </div>
+              </div>
+              
               <Separator />
+              
               <div className="flex items-center gap-2">
                 {currentUser.role === 'admin' && (
                   <>
@@ -125,6 +147,13 @@ const Settings: React.FC<SettingsProps> = ({ isDarkMode, onThemeToggle, currentU
                 )}
               </div>
             </>
+          ) : (
+            <div className="text-center py-4">
+              <p className="text-muted-foreground">{t('settings.notLoggedIn')}</p>
+              <Button variant="outline" className="mt-2">
+                {t('auth.signIn')}
+              </Button>
+            </div>
           )}
         </CardContent>
       </Card>
