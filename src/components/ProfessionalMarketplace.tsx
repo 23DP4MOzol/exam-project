@@ -15,6 +15,7 @@ import Settings from './Settings';
 import SupportChat from './SupportChat';
 import MessagesPage from './MessagesPage';
 import AdminChatManagement from './AdminChatManagement';
+import AuthPage from './AuthPage';
 import { 
   Star, 
   ShoppingCart, 
@@ -41,7 +42,7 @@ import {
 import laptopImage from '@/assets/laptop.jpg';
 import chairImage from '@/assets/chair.jpg';
 import jacketImage from '@/assets/jacket.jpg';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 
 interface Product {
   id: string;
@@ -81,7 +82,7 @@ interface Order {
 }
 
 const ProfessionalMarketplace: React.FC = () => {
-  const { user, profile, loading, signIn, signUp, signOut } = useAuth();
+  const { user, profile, loading, signIn, signUp, signOut, updateProfile, updatePassword } = useAuth();
   const { t, language, setLanguage } = useLanguage();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [currentView, setCurrentView] = useState<'home' | 'browse' | 'sell' | 'cart' | 'orders' | 'login' | 'settings' | 'admin' | 'messages' | 'admin-chat'>('home');
@@ -187,7 +188,10 @@ const ProfessionalMarketplace: React.FC = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setProducts(data || []);
+      setProducts((data || []).map(product => ({
+        ...product,
+        condition: product.condition as 'new' | 'used' | 'excellent'
+      })));
     } catch (error) {
       console.error('Error loading products:', error);
       // Fallback to demo data if database is not set up
@@ -258,7 +262,18 @@ const ProfessionalMarketplace: React.FC = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setOrders(data || []);
+      setOrders((data || []).map(order => ({
+        ...order,
+        status: order.status as 'pending' | 'paid' | 'shipped' | 'delivered',
+        order_items: (order.order_items || []).map(item => ({
+          product: {
+            ...item.product,
+            condition: item.product.condition as 'new' | 'used' | 'excellent'
+          },
+          quantity: item.quantity,
+          price: item.price
+        }))
+      })));
     } catch (error) {
       console.error('Error loading orders:', error);
     }
@@ -636,12 +651,14 @@ const ProfessionalMarketplace: React.FC = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        {currentView === 'settings' && (
+        {currentView === 'settings' && user && profile && (
           <Settings
             isDarkMode={isDarkMode}
             onThemeToggle={toggleTheme}
             currentUser={profile}
             onClose={() => setCurrentView('home')}
+            onUpdateProfile={updateProfile}
+            onUpdatePassword={updatePassword}
           />
         )}
 
@@ -1188,89 +1205,7 @@ const ProfessionalMarketplace: React.FC = () => {
         )}
 
         {currentView === 'login' && (
-          <div className="max-w-md mx-auto">
-            <Card className="p-6">
-              <CardHeader>
-                <CardTitle className="text-center">{t('auth.welcomeBack')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Tabs defaultValue="login" className="space-y-4">
-                  <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="login">{t('auth.signIn')}</TabsTrigger>
-                    <TabsTrigger value="register">{t('auth.signUp')}</TabsTrigger>
-                  </TabsList>
-
-                  <TabsContent value="login">
-                    <form onSubmit={handleLogin} className="space-y-4">
-                      <div>
-                        <Label htmlFor="login-email">{t('auth.email')}</Label>
-                        <Input
-                          id="login-email"
-                          type="email"
-                          value={loginForm.email}
-                          onChange={(e) => setLoginForm(prev => ({ ...prev, email: e.target.value }))}
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="login-password">{t('auth.password')}</Label>
-                        <Input
-                          id="login-password"
-                          type="password"
-                          value={loginForm.password}
-                          onChange={(e) => setLoginForm(prev => ({ ...prev, password: e.target.value }))}
-                          required
-                        />
-                      </div>
-                      <Button type="submit" className="w-full">
-                        {t('auth.signIn')}
-                      </Button>
-                    </form>
-                    <p className="text-sm text-muted-foreground mt-4 text-center">
-                      {t('auth.adminLogin')}
-                    </p>
-                  </TabsContent>
-
-                  <TabsContent value="register">
-                    <form onSubmit={handleRegister} className="space-y-4">
-                      <div>
-                        <Label htmlFor="register-username">Username</Label>
-                        <Input
-                          id="register-username"
-                          value={registerForm.username}
-                          onChange={(e) => setRegisterForm(prev => ({ ...prev, username: e.target.value }))}
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="register-email">Email</Label>
-                        <Input
-                          id="register-email"
-                          type="email"
-                          value={registerForm.email}
-                          onChange={(e) => setRegisterForm(prev => ({ ...prev, email: e.target.value }))}
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="register-password">Password</Label>
-                        <Input
-                          id="register-password"
-                          type="password"
-                          value={registerForm.password}
-                          onChange={(e) => setRegisterForm(prev => ({ ...prev, password: e.target.value }))}
-                          required
-                        />
-                      </div>
-                      <Button type="submit" className="w-full">
-                        Create Account
-                      </Button>
-                    </form>
-                  </TabsContent>
-                </Tabs>
-              </CardContent>
-            </Card>
-          </div>
+          <AuthPage onClose={() => setCurrentView('home')} />
         )}
       </main>
 

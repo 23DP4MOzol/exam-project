@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
@@ -7,16 +7,70 @@ import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Moon, Sun, User, Shield, Settings as SettingsIcon, Globe } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { Input } from '@/components/ui/input';
+import { toast } from '@/hooks/use-toast';
 
 interface SettingsProps {
   isDarkMode: boolean;
   onThemeToggle: () => void;
   currentUser: any;
   onClose: () => void;
+  onUpdateProfile?: (updates: any) => Promise<any>;
+  onUpdatePassword?: (newPassword: string) => Promise<any>;
 }
 
-const Settings: React.FC<SettingsProps> = ({ isDarkMode, onThemeToggle, currentUser, onClose }) => {
+const Settings: React.FC<SettingsProps> = ({ 
+  isDarkMode, 
+  onThemeToggle, 
+  currentUser, 
+  onClose,
+  onUpdateProfile,
+  onUpdatePassword 
+}) => {
   const { language, setLanguage, t } = useLanguage();
+  const [isEditingUsername, setIsEditingUsername] = useState(false);
+  const [isEditingEmail, setIsEditingEmail] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [newUsername, setNewUsername] = useState(currentUser?.username || '');
+  const [newEmail, setNewEmail] = useState(currentUser?.email || '');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const handleUpdateUsername = async () => {
+    if (!onUpdateProfile || !newUsername.trim()) return;
+    
+    const result = await onUpdateProfile({ username: newUsername.trim() });
+    if (!result.error) {
+      setIsEditingUsername(false);
+    }
+  };
+
+  const handleUpdateEmail = async () => {
+    if (!onUpdateProfile || !newEmail.trim()) return;
+    
+    const result = await onUpdateProfile({ email: newEmail.trim() });
+    if (!result.error) {
+      setIsEditingEmail(false);
+    }
+  };
+
+  const handleUpdatePassword = async () => {
+    if (!onUpdatePassword || !newPassword || newPassword !== confirmPassword) {
+      toast({
+        title: "Error",
+        description: "Passwords don't match",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    const result = await onUpdatePassword(newPassword);
+    if (!result.error) {
+      setIsChangingPassword(false);
+      setNewPassword('');
+      setConfirmPassword('');
+    }
+  };
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
@@ -103,20 +157,63 @@ const Settings: React.FC<SettingsProps> = ({ isDarkMode, onThemeToggle, currentU
                 <div className="space-y-2">
                   <Label className="text-sm text-muted-foreground">{t('auth.username')}</Label>
                   <div className="flex items-center gap-2">
-                    <p className="font-medium text-foreground flex-1">{currentUser.username}</p>
-                    <Button variant="outline" size="sm">
-                      {t('settings.changeUsername')}
-                    </Button>
+                    {isEditingUsername ? (
+                      <div className="flex items-center gap-2 flex-1">
+                        <Input
+                          value={newUsername}
+                          onChange={(e) => setNewUsername(e.target.value)}
+                          className="flex-1"
+                        />
+                        <Button size="sm" onClick={handleUpdateUsername}>
+                          Save
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => {
+                          setIsEditingUsername(false);
+                          setNewUsername(currentUser?.username || '');
+                        }}>
+                          Cancel
+                        </Button>
+                      </div>
+                    ) : (
+                      <>
+                        <p className="font-medium text-foreground flex-1">{currentUser.username}</p>
+                        <Button variant="outline" size="sm" onClick={() => setIsEditingUsername(true)}>
+                          {t('settings.changeUsername')}
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
                 
                 <div className="space-y-2">
                   <Label className="text-sm text-muted-foreground">{t('auth.email')}</Label>
                   <div className="flex items-center gap-2">
-                    <p className="font-medium text-foreground flex-1">{currentUser.email}</p>
-                    <Button variant="outline" size="sm">
-                      {t('settings.changeEmail')}
-                    </Button>
+                    {isEditingEmail ? (
+                      <div className="flex items-center gap-2 flex-1">
+                        <Input
+                          value={newEmail}
+                          onChange={(e) => setNewEmail(e.target.value)}
+                          type="email"
+                          className="flex-1"
+                        />
+                        <Button size="sm" onClick={handleUpdateEmail}>
+                          Save
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => {
+                          setIsEditingEmail(false);
+                          setNewEmail(currentUser?.email || '');
+                        }}>
+                          Cancel
+                        </Button>
+                      </div>
+                    ) : (
+                      <>
+                        <p className="font-medium text-foreground flex-1">{currentUser.email}</p>
+                        <Button variant="outline" size="sm" onClick={() => setIsEditingEmail(true)}>
+                          {t('settings.changeEmail')}
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
                 
@@ -124,9 +221,38 @@ const Settings: React.FC<SettingsProps> = ({ isDarkMode, onThemeToggle, currentU
                 
                 <div className="space-y-2">
                   <Label className="text-sm text-muted-foreground">{t('settings.password')}</Label>
-                  <Button variant="outline" size="sm" className="w-full">
-                    {t('settings.changePassword')}
-                  </Button>
+                  {isChangingPassword ? (
+                    <div className="space-y-3">
+                      <Input
+                        type="password"
+                        placeholder="New password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                      />
+                      <Input
+                        type="password"
+                        placeholder="Confirm new password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                      />
+                      <div className="flex gap-2">
+                        <Button size="sm" onClick={handleUpdatePassword}>
+                          Update Password
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => {
+                          setIsChangingPassword(false);
+                          setNewPassword('');
+                          setConfirmPassword('');
+                        }}>
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <Button variant="outline" size="sm" className="w-full" onClick={() => setIsChangingPassword(true)}>
+                      {t('settings.changePassword')}
+                    </Button>
+                  )}
                 </div>
               </div>
               
