@@ -18,17 +18,6 @@ export const useAuth = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check for stored mock sessions first
-    const storedUser = localStorage.getItem('mock_user');
-    const storedProfile = localStorage.getItem('mock_profile');
-    
-    if (storedUser && storedProfile) {
-      setUser(JSON.parse(storedUser));
-      setProfile(JSON.parse(storedProfile));
-      setLoading(false);
-      return;
-    }
-
     // Listen for auth changes first
     const {
       data: { subscription },
@@ -133,73 +122,44 @@ export const useAuth = () => {
 
   const signIn = async (email: string, password: string) => {
     try {
-      // For demo admin account, handle specially
-      if (email === 'admin@marketplace.com' && password === 'admin123') {
-        // Create a mock session for the admin
+      // For demo accounts, handle specially with database lookup
+      if ((email === 'admin@marketplace.com' && password === 'admin123') ||
+          (email === 'demo@marketplace.com' && password === 'demo123')) {
+        
+        // Query the database for the user
+        const { data: userData, error: userError } = await supabase
+          .from('users')
+          .select('*')
+          .eq('email', email)
+          .single();
+
+        if (userError || !userData) {
+          throw new Error('Demo user not found in database');
+        }
+
+        // Create a mock session for the demo account
         const mockUser = {
-          id: '00000000-0000-0000-0000-000000000001',
-          email: 'admin@marketplace.com',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
+          id: userData.id,
+          email: userData.email,
+          created_at: userData.created_at,
+          updated_at: userData.updated_at,
           email_confirmed_at: new Date().toISOString(),
           aud: 'authenticated',
           role: 'authenticated'
         } as any;
 
-        const adminProfile = {
-          id: '00000000-0000-0000-0000-000000000001',
-          email: 'admin@marketplace.com',
-          username: 'Administrator',
-          role: 'admin' as 'admin',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        };
-
-        // Store in localStorage for persistence
-        localStorage.setItem('mock_user', JSON.stringify(mockUser));
-        localStorage.setItem('mock_profile', JSON.stringify(adminProfile));
-
         setUser(mockUser);
-        setProfile(adminProfile);
-
-        toast({
-          title: "Welcome back, Admin!",
-          description: "You have been signed in successfully with full admin privileges.",
+        setProfile({
+          id: userData.id,
+          email: userData.email,
+          username: userData.username,
+          role: userData.role as 'admin' | 'user',
+          created_at: userData.created_at,
+          updated_at: userData.updated_at
         });
 
-        return { data: { user: mockUser, session: { user: mockUser } }, error: null };
-      }
-
-      // For demo user account
-      if (email === 'demo@marketplace.com' && password === 'demo123') {
-        const mockUser = {
-          id: '00000000-0000-0000-0000-000000000002',
-          email: 'demo@marketplace.com',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          email_confirmed_at: new Date().toISOString(),
-          aud: 'authenticated',
-          role: 'authenticated'
-        } as any;
-
-        const userProfile = {
-          id: '00000000-0000-0000-0000-000000000002',
-          email: 'demo@marketplace.com',
-          username: 'Demo User',
-          role: 'user' as 'user',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        };
-
-        // Store in localStorage for persistence
-        localStorage.setItem('mock_user', JSON.stringify(mockUser));
-        localStorage.setItem('mock_profile', JSON.stringify(userProfile));
-
-        setUser(mockUser);
-        setProfile(userProfile);
-
         toast({
-          title: "Welcome back!",
+          title: email === 'admin@marketplace.com' ? "Welcome back, Admin!" : "Welcome back!",
           description: "You have been signed in successfully.",
         });
 
@@ -232,10 +192,8 @@ export const useAuth = () => {
 
   const signOut = async () => {
     try {
-      // Clear any mock sessions (admin/demo)
+      // Clear any demo sessions
       if (user?.email === 'admin@marketplace.com' || user?.email === 'demo@marketplace.com') {
-        localStorage.removeItem('mock_user');
-        localStorage.removeItem('mock_profile');
         setUser(null);
         setProfile(null);
         toast({
