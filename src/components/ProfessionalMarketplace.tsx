@@ -12,9 +12,10 @@ import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/contexts/LanguageContext';
 import Settings from './Settings';
-import SupportChat from './SupportChat';
+import AISupport from './AISupport';
 import MessagesPage from './MessagesPage';
 import AdminChatManagement from './AdminChatManagement';
+import AdminAIChatManagement from './AdminAIChatManagement';
 import AuthPage from './AuthPage';
 import { 
   Star, 
@@ -37,7 +38,8 @@ import {
   DollarSign,
   Globe,
   MessageCircle,
-  Languages
+  Languages,
+  Bot
 } from 'lucide-react';
 import laptopImage from '@/assets/laptop.jpg';
 import chairImage from '@/assets/chair.jpg';
@@ -85,7 +87,7 @@ const ProfessionalMarketplace: React.FC = () => {
   const { user, profile, loading, signIn, signUp, signOut, updateProfile, updatePassword } = useAuth();
   const { t, language, setLanguage } = useLanguage();
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [currentView, setCurrentView] = useState<'home' | 'browse' | 'sell' | 'cart' | 'orders' | 'login' | 'settings' | 'admin' | 'messages' | 'admin-chat'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'browse' | 'sell' | 'cart' | 'orders' | 'login' | 'settings' | 'admin' | 'messages' | 'admin-chat' | 'admin-ai-chat'>('home');
   const [isSupportChatOpen, setIsSupportChatOpen] = useState(false);
   
   // Data states
@@ -1209,11 +1211,10 @@ const ProfessionalMarketplace: React.FC = () => {
         )}
       </main>
 
-      {/* Support Chat */}
-      <SupportChat
+      {/* AI Support Chat */}
+      <AISupport
         isOpen={isSupportChatOpen}
         onClose={() => setIsSupportChatOpen(false)}
-        userRole={user ? (profile?.role === 'admin' ? 'admin' : 'user') : 'guest'}
       />
     </div>
   );
