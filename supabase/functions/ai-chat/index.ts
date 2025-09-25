@@ -77,34 +77,47 @@ serve(async (req) => {
       aiResponse = responses.escalation;
       needsEscalation = true;
     } else {
-      // Use OpenAI for more complex queries
+      // Use OpenAI for more complex queries with rate limiting protection
       const systemPrompt = language === 'lv' ? 
         `Tu esi palīdzīgs klientu atbalsta asistents tirgus vietnei. Atbildi latviešu valodā. Esi draudzīgs un palīdzīgs. Ja klientam nepieciešama specifiska palīdzība, ieteic sazināties ar atbalsta komandu.` :
         `You are a helpful customer support assistant for a marketplace. Be friendly and helpful. If the customer needs specific assistance, suggest contacting the support team.`;
 
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${openAIApiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'gpt-4o-mini',
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: message }
-          ],
-          max_tokens: 300,
-          temperature: 0.7,
-        }),
-      });
+      try {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${openAIApiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o-mini',
+            messages: [
+              { role: 'system', content: systemPrompt },
+              { role: 'user', content: message }
+            ],
+            max_tokens: 300,
+            temperature: 0.7,
+          }),
+        });
 
-      if (!response.ok) {
-        throw new Error(`OpenAI API error: ${response.status}`);
+        if (response.status === 429) {
+          // Rate limit hit, use fallback response
+          aiResponse = language === 'lv' ? 
+            'Es saprotu jūsu jautājumu. Pašlaik es piedzīvoju lielu pieprasījumu. Lūdzu, mēģiniet vēlreiz pēc brīža vai sazinieties ar mūsu atbalsta komandu specifiskai palīdzībai.' :
+            'I understand your question. I\'m currently experiencing high demand. Please try again in a moment or contact our support team for specific assistance.';
+        } else if (!response.ok) {
+          throw new Error(`OpenAI API error: ${response.status}`);
+        } else {
+          const data = await response.json();
+          aiResponse = data.choices[0].message.content;
+        }
+      } catch (error) {
+        console.error('OpenAI API error:', error);
+        // Fallback response when OpenAI fails
+        aiResponse = language === 'lv' ? 
+          'Es saprotu jūsu jautājumu. Pašlaik es nevaru piekļūt visām savām zināšanām. Lūdzu, sazinieties ar mūsu atbalsta komandu, lai saņemtu palīdzību.' :
+          'I understand your question. I\'m currently unable to access all my knowledge. Please contact our support team for assistance.';
       }
-
-      const data = await response.json();
-      aiResponse = data.choices[0].message.content;
     }
 
     // Store message in database if sessionId provided
