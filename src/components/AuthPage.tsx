@@ -129,21 +129,34 @@ const AuthPage: React.FC<AuthPageProps> = ({ onClose }) => {
                 <div className="space-y-3">
                   <div className="text-center">
                     <p className="text-sm text-muted-foreground mb-3">
-                      Demo Admin Access
+                      Demo Accounts
                     </p>
-                    <Button
-                      variant="outline"
-                      onClick={adminLogin}
-                      className="w-full mb-3"
-                      disabled={loading}
-                    >
-                      <User className="h-4 w-4 mr-2" />
-                      Login as Admin
-                    </Button>
-                    <div className="bg-muted p-3 rounded-md text-sm">
-                      <p className="font-medium text-primary">Admin Credentials:</p>
-                      <p className="text-muted-foreground">Email: admin@marketplace.com</p>
-                      <p className="text-muted-foreground">Password: admin123</p>
+                    <div className="space-y-2">
+                      <Button
+                        variant="outline"
+                        onClick={adminLogin}
+                        className="w-full"
+                        disabled={loading}
+                      >
+                        <User className="h-4 w-4 mr-2" />
+                        Login as Admin
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => signIn('demo@marketplace.com', 'demo123').then(() => onClose())}
+                        className="w-full"
+                        disabled={loading}
+                      >
+                        <User className="h-4 w-4 mr-2" />
+                        Login as Demo User
+                      </Button>
+                    </div>
+                    <div className="bg-muted p-3 rounded-md text-sm mt-3">
+                      <p className="font-medium text-primary mb-2">Demo Credentials:</p>
+                      <div className="space-y-1 text-left">
+                        <p className="text-muted-foreground"><strong>Admin:</strong> admin@marketplace.com / admin123</p>
+                        <p className="text-muted-foreground"><strong>User:</strong> demo@marketplace.com / demo123</p>
+                      </div>
                     </div>
                   </div>
                 </div>

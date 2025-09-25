@@ -122,10 +122,9 @@ export const useAuth = () => {
     try {
       // For demo admin account, handle specially
       if (email === 'admin@marketplace.com' && password === 'admin123') {
-        // For demo purposes, we'll create a mock session
-        // In production, this would be a real Supabase Auth user
+        // Create a mock session for the admin
         const mockUser = {
-          id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+          id: '00000000-0000-0000-0000-000000000001',
           email: 'admin@marketplace.com',
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
@@ -134,22 +133,56 @@ export const useAuth = () => {
           role: 'authenticated'
         } as any;
 
-        setUser(mockUser);
-        setProfile({
-          id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+        const adminProfile = {
+          id: '00000000-0000-0000-0000-000000000001',
           email: 'admin@marketplace.com',
-          username: 'admin',
-          role: 'admin',
+          username: 'Administrator',
+          role: 'admin' as 'admin',
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
-        });
+        };
+
+        setUser(mockUser);
+        setProfile(adminProfile);
 
         toast({
           title: "Welcome back, Admin!",
+          description: "You have been signed in successfully with full admin privileges.",
+        });
+
+        return { data: { user: mockUser, session: { user: mockUser } }, error: null };
+      }
+
+      // For demo user account
+      if (email === 'demo@marketplace.com' && password === 'demo123') {
+        const mockUser = {
+          id: '00000000-0000-0000-0000-000000000002',
+          email: 'demo@marketplace.com',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          email_confirmed_at: new Date().toISOString(),
+          aud: 'authenticated',
+          role: 'authenticated'
+        } as any;
+
+        const userProfile = {
+          id: '00000000-0000-0000-0000-000000000002',
+          email: 'demo@marketplace.com',
+          username: 'Demo User',
+          role: 'user' as 'user',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
+
+        setUser(mockUser);
+        setProfile(userProfile);
+
+        toast({
+          title: "Welcome back!",
           description: "You have been signed in successfully.",
         });
 
-        return { data: { user: mockUser, session: null }, error: null };
+        return { data: { user: mockUser, session: { user: mockUser } }, error: null };
       }
 
       // For regular users, use normal Supabase auth
@@ -178,8 +211,8 @@ export const useAuth = () => {
 
   const signOut = async () => {
     try {
-      // Clear mock admin session
-      if (user?.email === 'admin@marketplace.com') {
+      // Clear any mock sessions (admin/demo)
+      if (user?.email === 'admin@marketplace.com' || user?.email === 'demo@marketplace.com') {
         setUser(null);
         setProfile(null);
         toast({
@@ -189,7 +222,7 @@ export const useAuth = () => {
         return;
       }
 
-      // Normal Supabase signout
+      // Normal Supabase signout for real users
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
 
