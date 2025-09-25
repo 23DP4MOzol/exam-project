@@ -18,6 +18,17 @@ export const useAuth = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Check for demo user in localStorage first
+    const storedUser = localStorage.getItem('demo_user');
+    const storedProfile = localStorage.getItem('demo_profile');
+    
+    if (storedUser && storedProfile) {
+      setUser(JSON.parse(storedUser));
+      setProfile(JSON.parse(storedProfile));
+      setLoading(false);
+      return;
+    }
+
     // Listen for auth changes first
     const {
       data: { subscription },
@@ -148,15 +159,21 @@ export const useAuth = () => {
           role: 'authenticated'
         } as any;
 
-        setUser(mockUser);
-        setProfile({
+        const mockProfile = {
           id: userData.id,
           email: userData.email,
           username: userData.username,
           role: userData.role as 'admin' | 'user',
           created_at: userData.created_at,
           updated_at: userData.updated_at
-        });
+        };
+
+        // Store in localStorage to persist across refreshes
+        localStorage.setItem('demo_user', JSON.stringify(mockUser));
+        localStorage.setItem('demo_profile', JSON.stringify(mockProfile));
+
+        setUser(mockUser);
+        setProfile(mockProfile);
 
         toast({
           title: email === 'admin@marketplace.com' ? "Welcome back, Admin!" : "Welcome back!",
@@ -194,6 +211,8 @@ export const useAuth = () => {
     try {
       // Clear any demo sessions
       if (user?.email === 'admin@marketplace.com' || user?.email === 'demo@marketplace.com') {
+        localStorage.removeItem('demo_user');
+        localStorage.removeItem('demo_profile');
         setUser(null);
         setProfile(null);
         toast({
