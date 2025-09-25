@@ -18,24 +18,37 @@ export const useAuth = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchProfile(session.user.id);
-      }
+    // Check for stored mock sessions first
+    const storedUser = localStorage.getItem('mock_user');
+    const storedProfile = localStorage.getItem('mock_profile');
+    
+    if (storedUser && storedProfile) {
+      setUser(JSON.parse(storedUser));
+      setProfile(JSON.parse(storedProfile));
       setLoading(false);
-    });
+      return;
+    }
 
-    // Listen for auth changes
+    // Listen for auth changes first
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state changed:', event, session?.user?.email);
       setUser(session?.user ?? null);
       if (session?.user) {
         await fetchProfile(session.user.id);
       } else {
         setProfile(null);
+      }
+      setLoading(false);
+    });
+
+    // Then get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session:', session?.user?.email);
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchProfile(session.user.id);
       }
       setLoading(false);
     });
@@ -142,6 +155,10 @@ export const useAuth = () => {
           updated_at: new Date().toISOString()
         };
 
+        // Store in localStorage for persistence
+        localStorage.setItem('mock_user', JSON.stringify(mockUser));
+        localStorage.setItem('mock_profile', JSON.stringify(adminProfile));
+
         setUser(mockUser);
         setProfile(adminProfile);
 
@@ -173,6 +190,10 @@ export const useAuth = () => {
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         };
+
+        // Store in localStorage for persistence
+        localStorage.setItem('mock_user', JSON.stringify(mockUser));
+        localStorage.setItem('mock_profile', JSON.stringify(userProfile));
 
         setUser(mockUser);
         setProfile(userProfile);
@@ -213,6 +234,8 @@ export const useAuth = () => {
     try {
       // Clear any mock sessions (admin/demo)
       if (user?.email === 'admin@marketplace.com' || user?.email === 'demo@marketplace.com') {
+        localStorage.removeItem('mock_user');
+        localStorage.removeItem('mock_profile');
         setUser(null);
         setProfile(null);
         toast({

@@ -12,7 +12,7 @@ import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/contexts/LanguageContext';
 import Settings from './Settings';
-import AISupport from './AISupport';
+import DraggableAISupport from './DraggableAISupport';
 import MessagesPage from './MessagesPage';
 import AdminChatManagement from './AdminChatManagement';
 import AdminAIChatManagement from './AdminAIChatManagement';
@@ -1212,7 +1212,7 @@ const ProfessionalMarketplace: React.FC = () => {
       </main>
 
       {/* AI Support Chat */}
-      <AISupport
+      <DraggableAISupport
         isOpen={isSupportChatOpen}
         onClose={() => setIsSupportChatOpen(false)}
       />
