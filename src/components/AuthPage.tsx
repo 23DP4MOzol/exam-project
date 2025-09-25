@@ -126,19 +126,26 @@ const AuthPage: React.FC<AuthPageProps> = ({ onClose }) => {
 
                 <Separator className="my-6" />
                 
-                <div className="text-center">
-                  <p className="text-sm text-muted-foreground mb-3">
-                    Quick Admin Access (Demo)
-                  </p>
-                  <Button
-                    variant="outline"
-                    onClick={adminLogin}
-                    className="w-full"
-                    disabled={loading}
-                  >
-                    <User className="h-4 w-4 mr-2" />
-                    Login as Admin
-                  </Button>
+                <div className="space-y-3">
+                  <div className="text-center">
+                    <p className="text-sm text-muted-foreground mb-3">
+                      Demo Admin Access
+                    </p>
+                    <Button
+                      variant="outline"
+                      onClick={adminLogin}
+                      className="w-full mb-3"
+                      disabled={loading}
+                    >
+                      <User className="h-4 w-4 mr-2" />
+                      Login as Admin
+                    </Button>
+                    <div className="bg-muted p-3 rounded-md text-sm">
+                      <p className="font-medium text-primary">Admin Credentials:</p>
+                      <p className="text-muted-foreground">Email: admin@marketplace.com</p>
+                      <p className="text-muted-foreground">Password: admin123</p>
+                    </div>
+                  </div>
                 </div>
               </TabsContent>
               
