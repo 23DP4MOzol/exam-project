@@ -91,7 +91,7 @@ Esi kodolīgs, draudzīgs un palīdzīgs. Ja lietotājiem nepieciešamas konkrē
     else if (messageLower.includes('listing fee') || messageLower.includes('list product') || 
              messageLower.includes('saraksta maksa') || messageLower.includes('pievienot produktu')) {
       quickResponse = language === 'lv'
-        : 'Produkta publicēšanas maksa ir €2.50. Šī summa tiks automātiski noņemta no jūsu bilances, kad publicēsiet produktu. Pārliecinieties, ka jums ir pietiekami daudz līdzekļu!'
+        ? 'Produkta publicēšanas maksa ir €2.50. Šī summa tiks automātiski noņemta no jūsu bilances, kad publicēsiet produktu. Pārliecinieties, ka jums ir pietiekami daudz līdzekļu!'
         : 'The product listing fee is €2.50. This will be automatically deducted from your balance when you list a product. Make sure you have enough funds!';
     }
     
