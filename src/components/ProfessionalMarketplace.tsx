@@ -17,6 +17,8 @@ import MessagesPage from './MessagesPage';
 import AdminChatManagement from './AdminChatManagement';
 import AdminAIChatManagement from './AdminAIChatManagement';
 import AuthPage from './AuthPage';
+import BalanceManager from './BalanceManager';
+import ProductDetailDialog from './ProductDetailDialog';
 import { 
   Star, 
   ShoppingCart, 
@@ -59,6 +61,10 @@ interface Product {
   stock: number;
   created_at: string;
   updated_at: string;
+  is_reserved?: boolean;
+  reserved_by?: string;
+  reserve_fee?: number;
+  listing_fee?: number;
   seller?: {
     username: string;
   };
@@ -87,8 +93,10 @@ const ProfessionalMarketplace: React.FC = () => {
   const { user, profile, loading, signIn, signUp, signOut, updateProfile, updatePassword } = useAuth();
   const { t, language, setLanguage } = useLanguage();
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [currentView, setCurrentView] = useState<'home' | 'browse' | 'sell' | 'cart' | 'orders' | 'login' | 'settings' | 'admin' | 'messages' | 'admin-chat' | 'admin-ai-chat'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'browse' | 'sell' | 'cart' | 'orders' | 'login' | 'settings' | 'admin' | 'messages' | 'admin-chat' | 'admin-ai-chat' | 'balance'>('home');
   const [isSupportChatOpen, setIsSupportChatOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isProductDialogOpen, setIsProductDialogOpen] = useState(false);
   
   // Data states
   const [products, setProducts] = useState<Product[]>([]);
@@ -96,6 +104,7 @@ const ProfessionalMarketplace: React.FC = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [users, setUsers] = useState<any[]>([]);
+  const [userBalance, setUserBalance] = useState(0);
   
   // Filter states
   const [searchTerm, setSearchTerm] = useState('');
@@ -145,11 +154,29 @@ const ProfessionalMarketplace: React.FC = () => {
     loadProducts();
     if (user) {
       loadOrders();
+      loadUserBalance();
       if (profile?.role === 'admin') {
         loadUsers();
       }
     }
   }, [user, profile]);
+
+  const loadUserBalance = async () => {
+    if (!user) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('balance')
+        .eq('id', user.id)
+        .single();
+
+      if (error) throw error;
+      setUserBalance(data?.balance || 0);
+    } catch (error) {
+      console.error('Error loading balance:', error);
+    }
+  };
 
   // Filter products
   useEffect(() => {
@@ -185,7 +212,7 @@ const ProfessionalMarketplace: React.FC = () => {
         .from('products')
         .select(`
           *,
-          seller:users(username)
+          seller:users!seller_id(username)
         `)
         .order('created_at', { ascending: false });
 
@@ -326,6 +353,18 @@ const ProfessionalMarketplace: React.FC = () => {
       });
       return;
     }
+
+    const LISTING_FEE = 2.50;
+    
+    if (userBalance < LISTING_FEE) {
+      toast({
+        title: "Insufficient Balance",
+        description: `You need at least €${LISTING_FEE.toFixed(2)} to list a product. Please add funds to your balance.`,
+        variant: "destructive"
+      });
+      setCurrentView('balance');
+      return;
+    }
   
     if (!newProduct.name || !newProduct.price || !newProduct.category) {
       toast({
@@ -358,6 +397,19 @@ const ProfessionalMarketplace: React.FC = () => {
     }
   
     try {
+      // Deduct listing fee
+      const { error: transactionError } = await supabase
+        .from('user_transactions')
+        .insert({
+          user_id: user.id,
+          amount: -LISTING_FEE,
+          transaction_type: 'listing_fee',
+          description: `Listing fee for ${newProduct.name}`
+        });
+
+      if (transactionError) throw transactionError;
+
+      // Create product
       const { data, error } = await supabase
         .from('products')
         .insert({
@@ -365,11 +417,12 @@ const ProfessionalMarketplace: React.FC = () => {
           price,
           category: newProduct.category,
           description: newProduct.description,
-          image_url: newProduct.image_url || '', // ensure it's a string
+          image_url: newProduct.image_url || '',
           seller_id: user.id,
           location: newProduct.location || 'Online',
           condition: newProduct.condition,
-          stock
+          stock,
+          listing_fee: LISTING_FEE
         })
         .select()
         .single();
@@ -377,8 +430,8 @@ const ProfessionalMarketplace: React.FC = () => {
       if (error) throw error;
   
       toast({
-        title: "Product Added",
-        description: "Your product has been listed successfully"
+        title: "Product Listed",
+        description: `Your product has been listed. €${LISTING_FEE.toFixed(2)} listing fee deducted.`
       });
   
       setNewProduct({
@@ -393,6 +446,7 @@ const ProfessionalMarketplace: React.FC = () => {
       });
   
       loadProducts();
+      loadUserBalance();
       setCurrentView('browse');
     } catch (error) {
       console.error('Error adding product:', error);
@@ -401,6 +455,82 @@ const ProfessionalMarketplace: React.FC = () => {
         description: "Failed to add product. Please try again.",
         variant: "destructive"
       });
+    }
+  };
+
+  const handleDeleteProduct = async (productId: string) => {
+    if (!user) return;
+
+    try {
+      const { error } = await supabase
+        .from('products')
+        .delete()
+        .eq('id', productId)
+        .eq('seller_id', user.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Product Deleted",
+        description: "Your product has been removed"
+      });
+
+      loadProducts();
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete product",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleProductClick = (product: Product) => {
+    setSelectedProduct(product);
+    setIsProductDialogOpen(true);
+  };
+
+  const handleMessageSeller = (sellerId: string, productId: string) => {
+    // Create conversation
+    createConversation(sellerId, productId);
+    setCurrentView('messages');
+  };
+
+  const createConversation = async (sellerId: string, productId: string) => {
+    if (!user) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('conversations')
+        .insert({
+          buyer_id: user.id,
+          seller_id: sellerId,
+          product_id: productId,
+          status: 'active'
+        })
+        .select()
+        .single();
+
+      if (error) {
+        // Check if conversation already exists
+        const { data: existing } = await supabase
+          .from('conversations')
+          .select('*')
+          .eq('buyer_id', user.id)
+          .eq('seller_id', sellerId)
+          .eq('product_id', productId)
+          .single();
+
+        if (!existing) throw error;
+      }
+
+      toast({
+        title: "Conversation Started",
+        description: "You can now message the seller"
+      });
+    } catch (error) {
+      console.error('Error creating conversation:', error);
     }
   };
   
@@ -622,6 +752,14 @@ const ProfessionalMarketplace: React.FC = () => {
                   >
                     <SettingsIcon className="h-4 w-4" />
                   </Button>
+                  <Button
+                    variant={currentView === 'balance' ? 'default' : 'ghost'}
+                    onClick={() => setCurrentView('balance')}
+                    className="flex items-center gap-2"
+                  >
+                    <DollarSign className="h-4 w-4" />
+                    <span className="font-bold">€{userBalance.toFixed(2)}</span>
+                  </Button>
                 </>
               )}
               
@@ -662,6 +800,21 @@ const ProfessionalMarketplace: React.FC = () => {
             onUpdateProfile={updateProfile}
             onUpdatePassword={updatePassword}
           />
+        )}
+
+        {currentView === 'balance' && user && (
+          <div className="max-w-2xl mx-auto">
+            <div className="mb-6">
+              <Button variant="ghost" onClick={() => setCurrentView('home')}>
+                ← Back
+              </Button>
+            </div>
+            <BalanceManager
+              userId={user.id}
+              currentBalance={userBalance}
+              onBalanceUpdate={(newBalance) => setUserBalance(newBalance)}
+            />
+          </div>
         )}
 
         {currentView === 'messages' && user && (
@@ -872,15 +1025,22 @@ const ProfessionalMarketplace: React.FC = () => {
                       {product.description}
                     </p>
                   </CardContent>
-                  <CardFooter className="p-4 pt-0">
+                  <CardFooter className="p-4 pt-0 flex gap-2">
                     <Button
-                      onClick={() => addToCart(product)}
-                      className="w-full"
-                      disabled={!user}
+                      onClick={() => handleProductClick(product)}
+                      className="flex-1"
                     >
-                      <ShoppingCart className="h-4 w-4 mr-2" />
-                      {t('product.addToCart')}
+                      View Details
                     </Button>
+                    {user && product.seller_id === user.id && (
+                      <Button
+                        onClick={() => handleDeleteProduct(product.id)}
+                        variant="destructive"
+                        size="icon"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
                   </CardFooter>
                 </Card>
               ))}
@@ -892,8 +1052,18 @@ const ProfessionalMarketplace: React.FC = () => {
           <div className="max-w-2xl mx-auto">
             <h1 className="text-3xl font-bold mb-6">{t('sell.title')}</h1>
             <Card className="p-6">
-              <form onSubmit={handleAddProduct} className="space-y-4">
-                <div>
+                <form onSubmit={handleAddProduct} className="space-y-4">
+                  <div className="bg-primary/10 p-4 rounded-lg mb-4">
+                    <p className="text-sm font-medium">
+                      💰 Listing Fee: €2.50 | Your Balance: €{userBalance.toFixed(2)}
+                    </p>
+                    {userBalance < 2.50 && (
+                      <p className="text-sm text-destructive mt-2">
+                        ⚠️ Insufficient balance. Please add funds to list a product.
+                      </p>
+                    )}
+                  </div>
+                  <div>
                   <Label htmlFor="name">{t('sell.form.name')}</Label>
                   <Input
                     id="name"
@@ -1212,9 +1382,20 @@ const ProfessionalMarketplace: React.FC = () => {
       </main>
 
       {/* AI Support Chat */}
-      <DraggableAISupport
-        isOpen={isSupportChatOpen}
-        onClose={() => setIsSupportChatOpen(false)}
+      <DraggableAISupport 
+        isOpen={isSupportChatOpen} 
+        onClose={() => setIsSupportChatOpen(false)} 
+      />
+
+      <ProductDetailDialog
+        product={selectedProduct}
+        isOpen={isProductDialogOpen}
+        onClose={() => setIsProductDialogOpen(false)}
+        currentUserId={user?.id || null}
+        userBalance={userBalance}
+        onReserve={loadProducts}
+        onMessage={handleMessageSeller}
+        onAddToCart={addToCart}
       />
     </div>
   );

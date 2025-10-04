@@ -1,1 +1,7 @@
 project_id = "xjtrtnxnrhbzxqyoowch"
+
+[functions.ai-chat]
+verify_jwt = false
+
+[functions.marketplace-ai]
+verify_jwt = false

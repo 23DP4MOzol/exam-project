@@ -286,9 +286,14 @@ export type Database = {
           description: string | null
           id: string
           image_url: string | null
+          is_reserved: boolean | null
+          listing_fee: number | null
           location: string | null
           name: string
           price: number
+          reserve_fee: number | null
+          reserved_at: string | null
+          reserved_by: string | null
           seller_id: string | null
           stock: number | null
           updated_at: string | null
@@ -300,9 +305,14 @@ export type Database = {
           description?: string | null
           id?: string
           image_url?: string | null
+          is_reserved?: boolean | null
+          listing_fee?: number | null
           location?: string | null
           name: string
           price: number
+          reserve_fee?: number | null
+          reserved_at?: string | null
+          reserved_by?: string | null
           seller_id?: string | null
           stock?: number | null
           updated_at?: string | null
@@ -314,14 +324,26 @@ export type Database = {
           description?: string | null
           id?: string
           image_url?: string | null
+          is_reserved?: boolean | null
+          listing_fee?: number | null
           location?: string | null
           name?: string
           price?: number
+          reserve_fee?: number | null
+          reserved_at?: string | null
+          reserved_by?: string | null
           seller_id?: string | null
           stock?: number | null
           updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "products_reserved_by_fkey"
+            columns: ["reserved_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "products_seller_id_fkey"
             columns: ["seller_id"]
@@ -414,8 +436,47 @@ export type Database = {
           },
         ]
       }
+      user_transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string | null
+          id: string
+          reference_id: string | null
+          transaction_type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          reference_id?: string | null
+          transaction_type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          reference_id?: string | null
+          transaction_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       users: {
         Row: {
+          balance: number
           created_at: string | null
           email: string
           id: string
@@ -424,6 +485,7 @@ export type Database = {
           username: string
         }
         Insert: {
+          balance?: number
           created_at?: string | null
           email: string
           id?: string
@@ -432,6 +494,7 @@ export type Database = {
           username: string
         }
         Update: {
+          balance?: number
           created_at?: string | null
           email?: string
           id?: string

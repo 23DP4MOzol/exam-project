@@ -113,10 +113,11 @@ const DraggableAISupport: React.FC<DraggableAISupportProps> = ({ isOpen, onClose
     setIsLoading(true);
 
     try {
-      const response = await supabase.functions.invoke('ai-chat', {
+      const response = await supabase.functions.invoke('marketplace-ai', {
         body: {
           message: inputMessage,
           sessionId,
+          userId: user?.id,
           language
         }
       });
