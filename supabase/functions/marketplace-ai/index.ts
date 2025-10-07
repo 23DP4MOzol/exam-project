@@ -50,10 +50,10 @@ serve(async (req) => {
       en: `You are a helpful AI assistant for a professional marketplace platform. 
       
 Key features you can help with:
-- Product listings: Users pay a €2.50 listing fee from their balance
-- Product reservations: Users can reserve items for €1.00
+- Product listings: Users pay a dynamic listing fee (0.5% of price, minimum €0.50)
+- Product reservations: Users can reserve items for €0.20
 - Messaging: Users can contact sellers through the platform
-- Balance management: Users must maintain at least €1.00 balance
+- Balance management: Users can add funds to their balance
 - Product management: Users can edit/delete their own listings
 
 Current user context: ${userContext || 'Guest user'}
@@ -62,10 +62,10 @@ Be concise, friendly, and helpful. If users need specific actions (like adding b
       lv: `Tu esi palīdzīgs AI asistents profesionālai tirgus platformai.
 
 Galvenās funkcijas, ar kurām vari palīdzēt:
-- Produktu saraksti: Lietotāji maksā €2.50 saraksta maksu no sava bilances
-- Produktu rezervācijas: Lietotāji var rezervēt preces par €1.00
+- Produktu saraksti: Lietotāji maksā dinamisku saraksta maksu (0.5% no cenas, minimums €0.50)
+- Produktu rezervācijas: Lietotāji var rezervēt preces par €0.20
 - Ziņojumapmaiņa: Lietotāji var sazināties ar pārdevējiem caur platformu  
-- Bilances pārvaldība: Lietotājiem jāuztur vismaz €1.00 bilance
+- Bilances pārvaldība: Lietotāji var pievienot līdzekļus savai bilancei
 - Produktu pārvaldība: Lietotāji var rediģēt/dzēst savus sarakstus
 
 Pašreizējais lietotāja konteksts: ${userContext || 'Vieslietotājs'}
@@ -91,16 +91,16 @@ Esi kodolīgs, draudzīgs un palīdzīgs. Ja lietotājiem nepieciešamas konkrē
     else if (messageLower.includes('listing fee') || messageLower.includes('list product') || 
              messageLower.includes('saraksta maksa') || messageLower.includes('pievienot produktu')) {
       quickResponse = language === 'lv'
-        ? 'Produkta publicēšanas maksa ir €2.50. Šī summa tiks automātiski noņemta no jūsu bilances, kad publicēsiet produktu. Pārliecinieties, ka jums ir pietiekami daudz līdzekļu!'
-        : 'The product listing fee is €2.50. This will be automatically deducted from your balance when you list a product. Make sure you have enough funds!';
+        ? 'Produkta publicēšanas maksa ir 0.5% no produkta cenas (minimums €0.50). Piemēram, €100 produktam maksa ir €0.50. Šī summa tiks automātiski noņemta no jūsu bilances.'
+        : 'The product listing fee is 0.5% of the product price (minimum €0.50). For example, a €100 product costs €0.50 to list. This will be automatically deducted from your balance.';
     }
     
     // Reservation
     else if (messageLower.includes('reserve') || messageLower.includes('reservation') ||
              messageLower.includes('rezerv')) {
       quickResponse = language === 'lv'
-        ? 'Produkta rezervēšana maksā €1.00. Dodieties uz produkta lapu un noklikšķiniet uz "Rezervēt". Rezervācija garantē, ka produkts tiek noturēts jums.'
-        : 'Reserving a product costs €1.00. Go to the product page and click "Reserve". A reservation guarantees the product is held for you.';
+        ? 'Produkta rezervēšana maksā €0.20. Dodieties uz produkta lapu un noklikšķiniet uz "Rezervēt". Rezervācija garantē, ka produkts tiek noturēts jums.'
+        : 'Reserving a product costs €0.20. Go to the product page and click "Reserve". A reservation guarantees the product is held for you.';
     }
     
     // Messaging sellers

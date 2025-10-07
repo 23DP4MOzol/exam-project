@@ -60,10 +60,12 @@ const ProductDetailDialog: React.FC<ProductDetailDialogProps> = ({
       return;
     }
 
-    if (userBalance < (product.reserve_fee || 1)) {
+    const RESERVE_FEE = 0.20;
+
+    if (userBalance < RESERVE_FEE) {
       toast({
         title: "Insufficient balance",
-        description: `You need at least €${product.reserve_fee || 1} to reserve this product`,
+        description: `You need at least €${RESERVE_FEE.toFixed(2)} to reserve this product`,
         variant: "destructive"
       });
       return;
@@ -77,7 +79,7 @@ const ProductDetailDialog: React.FC<ProductDetailDialogProps> = ({
         .from('user_transactions')
         .insert({
           user_id: currentUserId,
-          amount: -(product.reserve_fee || 1),
+          amount: -RESERVE_FEE,
           transaction_type: 'reserve_fee',
           description: `Reserved ${product.name}`,
           reference_id: product.id
@@ -99,7 +101,7 @@ const ProductDetailDialog: React.FC<ProductDetailDialogProps> = ({
 
       toast({
         title: "Product Reserved",
-        description: `${product.name} has been reserved for you`
+        description: `${product.name} has been reserved for €${RESERVE_FEE.toFixed(2)}`
       });
 
       onReserve(product.id);
@@ -194,7 +196,7 @@ const ProductDetailDialog: React.FC<ProductDetailDialogProps> = ({
                     ) : (
                       <Lock className="h-4 w-4 mr-2" />
                     )}
-                    Reserve for €{product.reserve_fee || 1.00}
+                    Reserve for €0.20
                   </Button>
                 )}
 

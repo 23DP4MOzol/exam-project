@@ -116,7 +116,9 @@ const BalanceManager: React.FC<BalanceManagerProps> = ({ userId, currentBalance,
             <DollarSign className="h-5 w-5" />
             Current Balance
           </CardTitle>
-          <CardDescription>Manage your marketplace wallet</CardDescription>
+          <CardDescription>
+            Listing fee: 0.5% of product price (min €0.50) • Reserve fee: €0.20
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-4xl font-bold mb-6">

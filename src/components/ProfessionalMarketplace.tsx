@@ -354,18 +354,6 @@ const ProfessionalMarketplace: React.FC = () => {
       return;
     }
 
-    const LISTING_FEE = 2.50;
-    
-    if (userBalance < LISTING_FEE) {
-      toast({
-        title: "Insufficient Balance",
-        description: `You need at least €${LISTING_FEE.toFixed(2)} to list a product. Please add funds to your balance.`,
-        variant: "destructive"
-      });
-      setCurrentView('balance');
-      return;
-    }
-  
     if (!newProduct.name || !newProduct.price || !newProduct.category) {
       toast({
         title: "Error",
@@ -393,6 +381,19 @@ const ProfessionalMarketplace: React.FC = () => {
         description: "Please enter a valid stock number",
         variant: "destructive"
       });
+      return;
+    }
+
+    // Calculate dynamic listing fee: 0.5% of price, minimum €0.50
+    const LISTING_FEE = Math.max(0.50, price * 0.005);
+    
+    if (userBalance < LISTING_FEE) {
+      toast({
+        title: "Insufficient Balance",
+        description: `You need €${LISTING_FEE.toFixed(2)} to list this product. Please add funds to your balance.`,
+        variant: "destructive"
+      });
+      setCurrentView('balance');
       return;
     }
   
