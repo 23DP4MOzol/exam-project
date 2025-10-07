@@ -23,7 +23,6 @@ interface BalanceManagerProps {
 }
 
 const BalanceManager: React.FC<BalanceManagerProps> = ({ userId, currentBalance, onBalanceUpdate }) => {
-  const [amount, setAmount] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loadingTransactions, setLoadingTransactions] = useState(true);
@@ -50,20 +49,7 @@ const BalanceManager: React.FC<BalanceManagerProps> = ({ userId, currentBalance,
     }
   };
 
-  const handleAddFunds = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    const depositAmount = parseFloat(amount);
-    
-    if (isNaN(depositAmount) || depositAmount < 1) {
-      toast({
-        title: "Invalid Amount",
-        description: "Minimum deposit is €1.00",
-        variant: "destructive"
-      });
-      return;
-    }
-
+  const handleAddFunds = async (depositAmount: number) => {
     setIsLoading(true);
 
     try {
@@ -83,7 +69,6 @@ const BalanceManager: React.FC<BalanceManagerProps> = ({ userId, currentBalance,
         description: `€${depositAmount.toFixed(2)} has been added to your balance`
       });
 
-      setAmount('');
       onBalanceUpdate(currentBalance + depositAmount);
       loadTransactions();
     } catch (error) {
@@ -125,33 +110,46 @@ const BalanceManager: React.FC<BalanceManagerProps> = ({ userId, currentBalance,
             €{currentBalance.toFixed(2)}
           </div>
 
-          <form onSubmit={handleAddFunds} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="amount">Add Funds</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="amount"
-                  type="number"
-                  step="0.01"
-                  min="1"
-                  placeholder="Minimum €1.00"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  disabled={isLoading}
-                />
-                <Button type="submit" disabled={isLoading}>
-                  {isLoading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <>
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add
-                    </>
-                  )}
-                </Button>
-              </div>
+          <div className="space-y-3">
+            <Label>Quick Add Funds</Label>
+            <div className="grid grid-cols-2 gap-2">
+              <Button 
+                onClick={() => handleAddFunds(5)} 
+                disabled={isLoading}
+                variant="outline"
+                className="h-16 text-lg font-semibold"
+              >
+                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : '€5'}
+              </Button>
+              <Button 
+                onClick={() => handleAddFunds(10)} 
+                disabled={isLoading}
+                variant="outline"
+                className="h-16 text-lg font-semibold"
+              >
+                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : '€10'}
+              </Button>
+              <Button 
+                onClick={() => handleAddFunds(20)} 
+                disabled={isLoading}
+                variant="outline"
+                className="h-16 text-lg font-semibold"
+              >
+                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : '€20'}
+              </Button>
+              <Button 
+                onClick={() => handleAddFunds(50)} 
+                disabled={isLoading}
+                variant="outline"
+                className="h-16 text-lg font-semibold"
+              >
+                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : '€50'}
+              </Button>
             </div>
-          </form>
+            <p className="text-xs text-muted-foreground mt-2">
+              Click any amount to instantly add funds to your balance
+            </p>
+          </div>
         </CardContent>
       </Card>
 

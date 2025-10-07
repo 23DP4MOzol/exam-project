@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { MessageCircle, Send, User, Clock, ShoppingBag } from 'lucide-react';
+import { MessageCircle, Send, User, Clock, ShoppingBag, Shield, X } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 interface Conversation {
@@ -54,6 +54,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ onClose }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const [showSecurityInfo, setShowSecurityInfo] = useState(true);
 
   useEffect(() => {
     if (user) {
@@ -269,6 +270,31 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ onClose }) => {
                 </div>
               </div>
             </div>
+
+            {/* Security Information Banner */}
+            {showSecurityInfo && (
+              <div className="mx-4 mt-4 p-3 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg">
+                <div className="flex gap-3">
+                  <Shield className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                  <div className="flex-1">
+                    <h4 className="font-medium text-blue-900 dark:text-blue-100 text-sm mb-1">
+                      Private & Secure Communication
+                    </h4>
+                    <p className="text-xs text-blue-800 dark:text-blue-200">
+                      This is a direct peer-to-peer chat between you and the other party. The platform owner does not monitor or access your messages. 
+                      All transactions, shipping arrangements, and product exchanges are handled directly between buyer and seller. 
+                      Please exchange contact information securely and comply with Latvia's consumer protection laws.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setShowSecurityInfo(false)}
+                    className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Messages */}
             <ScrollArea className="flex-1 p-4">

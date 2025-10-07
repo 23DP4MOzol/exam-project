@@ -27,6 +27,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onClose }) => {
     if (!result.error) {
       setLoginForm({ email: '', password: '' });
       onClose();
+      setTimeout(() => window.location.reload(), 100);
     }
   };
 
@@ -42,12 +43,14 @@ const AuthPage: React.FC<AuthPageProps> = ({ onClose }) => {
     if (!result.error) {
       setRegisterForm({ username: '', email: '', password: '', confirmPassword: '' });
       onClose();
+      setTimeout(() => window.location.reload(), 100);
     }
   };
 
   const adminLogin = async () => {
     await signIn('admin@marketplace.com', 'admin123');
     onClose();
+    setTimeout(() => window.location.reload(), 100);
   };
 
   return (
@@ -143,7 +146,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onClose }) => {
                       </Button>
                       <Button
                         variant="outline"
-                        onClick={() => signIn('demo@marketplace.com', 'demo123').then(() => onClose())}
+                        onClick={() => signIn('demo@marketplace.com', 'demo123').then(() => { onClose(); setTimeout(() => window.location.reload(), 100); })}
                         className="w-full"
                         disabled={loading}
                       >
